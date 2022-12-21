@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export const ArrowRight = ({
+const ArrowRight = ({
   width = "5",
   height = "8",
   color,
@@ -22,3 +22,5 @@ export const ArrowRight = ({
     />
   </svg>
 );
+
+export default ArrowRight;

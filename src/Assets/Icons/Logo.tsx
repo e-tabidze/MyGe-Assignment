@@ -1,6 +1,6 @@
 import { SVGProps } from "react";
 
-export const LogoSVG = ({
+const LogoSVG = ({
   width = "161",
   height = "46",
 }: SVGProps<SVGSVGElement>) => (
@@ -64,3 +64,5 @@ export const LogoSVG = ({
     </defs>
   </svg>
 );
+
+export default LogoSVG;
