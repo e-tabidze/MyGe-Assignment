@@ -3,7 +3,7 @@ import { api2Service, statisMyService } from "./http.service";
 export const getManufacturers = async () => {
   return await statisMyService
     .get("/mans.json")
-    .then((res) => console.log(res, "[GOT MANUFACTURERS]"));
+    .then((res) => res.data);
 };
 
 export const getModels = async (man_id: number) => {
@@ -11,7 +11,7 @@ export const getModels = async (man_id: number) => {
 
   return await api2Service
     .get(`/${lang || "ka"}/getManModels?man_id=${man_id}`)
-    .then((res) => console.log(res, "[GOT MODELS]"));
+    .then((res) => res.data.data);
 };
 
 export const getCategories = async () => {
@@ -19,7 +19,7 @@ export const getCategories = async () => {
 
   return await api2Service
     .get(`/${lang || "ka"}/cats/get`)
-    .then((res) => console.log(res, "[GOT CATEGORIES]"));
+    .then((res) => res.data.data);
 };
 
 export const getProducts = async () => {
@@ -27,5 +27,5 @@ export const getProducts = async () => {
 
   return await api2Service
     .get(`/${lang || "ka"}/products`)
-    .then((res) => console.log(res, "[GOT CAR LIST]"));
+    .then((res) => res.data.data);
 };
