@@ -61,5 +61,8 @@ export default function CustomDropdown({ label, filterData }: Props) {
 const ManufacturerSelect = (props: SelectorProps) => (
   <div className="w-full bg-transparent">
     <div className="flex flex-row text-sm">პოპულარული <hr /></div>
+    {Array.isArray(props.data) && props.data.map(item => (
+      <div></div>
+    ))}
   </div>
 )
