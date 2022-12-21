@@ -7,7 +7,7 @@ type Props = {};
 
 const colorScheme = { inactive: "#8C929B", active: "#FD4100" };
 const bgColorScheme = { inactive: "border-b-[#E2E5EB] bg-[#F9F9FB]", active: "border-b-[#FD4100] bg-white" };
-// const bgColorScheme = { inactive: "", active: "bg-white"}
+
 export default function ClickSelector({}: Props) {
   const [vehicleType, setVehicleType] = useState(0);
 
