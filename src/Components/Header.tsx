@@ -1,5 +1,5 @@
 import React from "react";
-import { LogoSVG } from "../Assets/Icons/Logo";
+import LogoSVG from "../Assets/Icons/Logo";
 
 type Props = {};
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { ArrowRight } from "../Assets/Icons/ArrowRight";
+import ArrowRight from "../Assets/Icons/ArrowRight";
 type Props = {};
 
 export default function BreadCrumbs({}: Props) {
