@@ -1,6 +1,6 @@
 export interface IBargain {
-  name: string;
   id: number;
+  name: string;
 }
 
 export interface IManufacturer {
@@ -11,6 +11,12 @@ export interface IManufacturer {
   man_name: string;
 }
 
+export interface IModel {
+  model_id: number;
+  man_id: number;
+  model_name: string;
+}
+
 export interface ICategory {
   category_id: number;
   category_type: number;
@@ -18,10 +24,4 @@ export interface ICategory {
   title: string;
   seo_title: string;
   vehicle_types: number[];
-}
-
-export interface IModel {
-  model_id: number;
-  man_id: number;
-  model_name: string;
 }

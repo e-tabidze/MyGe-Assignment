@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { bargainType } from "../Helper/Contsants";
 import {
   getCategories,
@@ -15,6 +16,7 @@ import RangePicker from "./RangePicker";
 type Props = {};
 
 export default function Sidebar({}: Props) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [manufacturers, setManufacturers] = useState<IManufacturer[]>([]);
   const [models, setModels] = useState([]);

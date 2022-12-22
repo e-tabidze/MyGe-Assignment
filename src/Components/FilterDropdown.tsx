@@ -1,11 +1,13 @@
-import { SetStateAction, useState, Dispatch } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import ArrowBottom from "../Assets/Icons/ArrowBottom";
 import { ICategory, IBargain, IManufacturer, IModel } from "../Types/general";
 import CustomButton from "./CustomButton";
 
 type Props = {
   label: string;
-  filterData: IBargain[] | IManufacturer[] | ICategory[];
+  filterData: IBargain[] | IManufacturer[] | IModel[] | ICategory[];
+  item?: IBargain | IManufacturer | IModel | ICategory;
 };
 
 interface ILabelArr {
@@ -15,6 +17,16 @@ interface ILabelArr {
   [key: string]: string;
 }
 
+interface IFilterState {
+  id: Array<string | number | undefined>;
+  name: Array<string | undefined>;
+}
+
+const initialFilterState: IFilterState = {
+  id: [],
+  name: [],
+};
+
 const labelArr: ILabelArr = {
   bargainType: "გარიგების ტიპი",
   manufacturer: "მწარმოებელი",
@@ -23,10 +35,14 @@ const labelArr: ILabelArr = {
 };
 
 export default function CustomDropdown({ label, filterData }: Props) {
-  const [filterState, setFilterState] = useState<string>("");
-  const [filterID, setFilterID] = useState<number | null>(null);
-
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [filterState, setFilterState] =
+    useState<IFilterState>(initialFilterState);
   const [filterActive, toggleFilterActive] = useState<boolean>(false);
+
+  useEffect(() => {
+    console.log(filterState, "[FS]");
+  }, [filterState]);
 
   // User Defined Type-Guards
   function isManufacturer(obj: any): obj is IManufacturer {
@@ -45,6 +61,29 @@ export default function CustomDropdown({ label, filterData }: Props) {
     return "name" in obj;
   }
 
+  const returnObjID = (item: Props["item"]) => {
+    let propID;
+
+    if (isBargain(item)) propID = item.id;
+    if (isManufacturer(item)) propID = item.man_id;
+    if (isModel(item)) propID = item.model_id;
+    if (isCategory(item)) propID = item.category_id;
+
+    return propID;
+  };
+
+  const returnObjName = (item: Props["item"]) => {
+    let propName;
+
+    if (isBargain(item)) propName = item.name;
+    if (isManufacturer(item)) propName = item.man_name;
+    if (isModel(item)) propName = item.model_name;
+    if (isCategory(item)) propName = item.title;
+
+    return propName;
+  };
+
+  // Filter State Actions
   const handleFilterToggle = () => {
     if (label === "models" && filterData.length === 0) return;
     toggleFilterActive(!filterActive);
@@ -52,7 +91,34 @@ export default function CustomDropdown({ label, filterData }: Props) {
 
   const handleResetFilter = () => {};
 
-  const handleSetFilter = () => {};
+  const handleSetFilter = (item: Props["item"]) => {
+    // Using {...filterState} will Share State Between Reusable Components
+    let state: IFilterState = {
+      id: [...filterState.id],
+      name: [...filterState.name],
+    };
+
+    state.id.push(returnObjID(item));
+    state.name.push(returnObjName(item));
+
+    setFilterState(state);
+  };
+
+  const handleSaveParams = () => {
+    console.log(filterState, "[FILTER STATE]");
+  };
+
+  const handleRenderPlaceholder = () => {
+    if (filterState.name.length === 0) {
+      return false;
+    }
+
+    if (filterState.name.length === 1) {
+      return filterState.name.map((namespace) => `${namespace} `);
+    }
+
+    return filterState.name.map((namespace) => `${namespace}, `);
+  };
 
   return (
     <div className="relative">
@@ -62,8 +128,8 @@ export default function CustomDropdown({ label, filterData }: Props) {
         onClick={handleFilterToggle}
         className="flex flex-row justify-between items-center cursor-pointer w-full mt-2 mb-5 border border-[#C2C9D8] hover:border-[#6F7383] rounded-lg text-[13px] py-[13.5px] px-3"
       >
-        <span className="text-main-gray">
-          {filterState || `ყველა ${labelArr[label]}`}
+        <span className="text-main-gray truncate">
+          {handleRenderPlaceholder() || `ყველა ${labelArr[label]}`}
         </span>
 
         <div
@@ -83,23 +149,19 @@ export default function CustomDropdown({ label, filterData }: Props) {
               </div>
             )}
 
-            {filterData.map(
-              (item: IBargain | IManufacturer | IModel | ICategory) => (
-                <div className="flex flex-row cursor-pointer items-center px-4 py-2 text-main-gray hover:text-secondary-black">
-                  <div className="w-[14px] h-[14px] border border-[#a4aec1] bg-white mr-3 rounded"></div>
-                  {isBargain(item) && <span>{item.name}</span>}
-                  {isManufacturer(item) && <span>{item.man_name}</span>}
-                  {isModel(item) && <span>{item.model_name}</span>}
-                  {isCategory(item) && <span>{item.title}</span>}
-                </div>
-              )
-            )}
+            {filterData.map((item: Props["item"]) => (
+              <div
+                key={returnObjID(item)}
+                onClick={() => handleSetFilter(item)}
+                className="flex flex-row cursor-pointer items-center px-4 py-2 text-main-gray hover:text-secondary-black"
+              >
+                <div className="w-[14px] h-[14px] border border-[#a4aec1] bg-white mr-3 rounded"></div>
+                <span>{returnObjName(item)}</span>
+              </div>
+            ))}
 
             <div>
-              <CustomButton
-                onClick={() => console.log("I'm Picking!")}
-                text="არჩევა"
-              />
+              <CustomButton onClick={handleSaveParams} text="არჩევა" />
             </div>
           </div>
         </div>
