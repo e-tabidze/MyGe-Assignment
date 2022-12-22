@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import ArrowBottom from "../Assets/Icons/ArrowBottom";
+import CheckSVG from "../Assets/Icons/CheckMark";
 import { ICategory, IBargain, IManufacturer, IModel } from "../Types/general";
 import CustomButton from "./CustomButton";
 
@@ -155,7 +156,15 @@ export default function CustomDropdown({ label, filterData }: Props) {
                 onClick={() => handleSetFilter(item)}
                 className="flex flex-row cursor-pointer items-center px-4 py-2 text-main-gray hover:text-secondary-black"
               >
-                <div className="w-[14px] h-[14px] border border-[#a4aec1] bg-white mr-3 rounded"></div>
+                <div
+                  className={`flex justify-center items-center w-[14px] h-[14px] border  ${
+                    filterState.id.includes(returnObjID(item))
+                      ? "bg-main-orange border-main-orange"
+                      : "bg-white border-[#a4aec1]"
+                  } mr-3 rounded`}
+                >
+                  <CheckSVG />
+                </div>
                 <span>{returnObjName(item)}</span>
               </div>
             ))}
