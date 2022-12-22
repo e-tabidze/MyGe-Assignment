@@ -46,7 +46,7 @@ export default function Sidebar({}: Props) {
     <div className="max-w-[250px] bg-white rounded-[11px] box-border border border-[#E2E5EB]">
       <ClickSelector />
 
-      <div className="p-6">
+      <div className="p-6 pb-1">
         {/* გარიგების ტიპი */}
         <FilterDropdown label="bargainType" filterData={bargainType} />
 
@@ -60,9 +60,11 @@ export default function Sidebar({}: Props) {
         <FilterDropdown label="category" filterData={categories} />
       </div>
       <hr />
-      <RangePicker />
+      <div className="pt-[18px] pb-11 px-6">
+        <RangePicker label="ფასი" hasSwitcher={true} />
+      </div>
 
-      <div className="w-full pt-4 pb-5">
+      <div className="w-full pt-4 pb-5 shadow-lg shadow-upper z-10">
         <CustomButton
           onClick={() => console.log("I'm Searching!")}
           text="ძებნა"
