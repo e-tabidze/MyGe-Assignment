@@ -1,28 +1,10 @@
-export const bargainType = {
-    sale: {
-        name: "იყიდება",
-        id: 0
-    }, 
-    rent: {
-        name: "ქირავდება",
+export const bargainType = [
+    {
+        id: 0,
+        name: 'იყიდება'
+    },
+    {
         id: 1,
-        subCats: [
-            {
-                name: "ქირავდება დღიურად",
-                id: 1
-            },
-            {
-                name: "ქირავდება მძღოლით",
-                id: 2
-            },
-            {
-                name: "საბოლოო შესყიდვით",
-                id: 3
-            },
-            {
-                name: "ავტომობილი დაზღვეულია",
-                id: 4
-            },
-        ]
+        name: 'ქირავდება'
     }
-};
+];

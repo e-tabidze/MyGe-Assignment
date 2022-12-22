@@ -1,13 +1,4 @@
-export interface IDealType {
-  sale: IBargain;
-  rent: {
-    name: string;
-    id: number;
-    subCats: IBargain[];
-  };
-}
-
-interface IBargain {
+export interface IBargain {
   name: string;
   id: number;
 }
@@ -30,5 +21,7 @@ export interface ICategory {
 }
 
 export interface IModel {
-
+  model_id: number;
+  man_id: number;
+  model_name: string;
 }

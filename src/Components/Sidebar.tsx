@@ -9,7 +9,7 @@ import { ICategory, IManufacturer } from "../Types/general";
 
 import ClickSelector from "./ClickSelector";
 import CustomButton from "./CustomButton";
-import CustomDropdown from "./CustomDropdown";
+import FilterDropdown from "./FilterDropdown";
 import RangePicker from "./RangePicker";
 
 type Props = {};
@@ -24,6 +24,7 @@ export default function Sidebar({}: Props) {
   useEffect(() => {
     handleGetManufacturers();
     handleGetCategories();
+    handleGetModels();
   }, []);
 
   const handleGetManufacturers = async () => {
@@ -37,7 +38,8 @@ export default function Sidebar({}: Props) {
   };
 
   const handleGetModels = async () => {
-    const result = await getModels(chosenMan || 0);
+    const result = await getModels(chosenMan || 3);
+    setModels(result);
   };
 
   return (
@@ -46,13 +48,16 @@ export default function Sidebar({}: Props) {
 
       <div className="p-6">
         {/* გარიგების ტიპი */}
-        <CustomDropdown label="bargainType" filterData={bargainType} />
+        <FilterDropdown label="bargainType" filterData={bargainType} />
 
         {/* მწარმოებელი */}
-        <CustomDropdown label="manufacturer" filterData={manufacturers} />
+        <FilterDropdown label="manufacturer" filterData={manufacturers} />
+
+        {/* მოდელები */}
+        <FilterDropdown label="models" filterData={models} />
 
         {/* კატეგორია */}
-        <CustomDropdown label="category" filterData={categories} />
+        <FilterDropdown label="category" filterData={categories} />
       </div>
       <hr />
       <RangePicker />
