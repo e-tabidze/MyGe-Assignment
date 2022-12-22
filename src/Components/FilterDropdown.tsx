@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import ArrowBottom from "../Assets/Icons/ArrowBottom";
 import CheckSVG from "../Assets/Icons/CheckMark";
@@ -37,13 +37,28 @@ const labelArr: ILabelArr = {
 
 export default function CustomDropdown({ label, filterData }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const componentRef = useRef<any>(null);
+
   const [filterState, setFilterState] =
     useState<IFilterState>(initialFilterState);
   const [filterActive, toggleFilterActive] = useState<boolean>(false);
 
   useEffect(() => {
-    console.log(filterState, "[FS]");
-  }, [filterState]);
+    function handleClickListener(event: MouseEvent) {
+      if (
+        componentRef.current &&
+        !componentRef.current.contains(event.target)
+      ) {
+        toggleFilterActive(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickListener);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickListener);
+    };
+  }, [componentRef]);
 
   // User Defined Type-Guards
   function isManufacturer(obj: any): obj is IManufacturer {
@@ -99,10 +114,22 @@ export default function CustomDropdown({ label, filterData }: Props) {
       name: [...filterState.name],
     };
 
-    state.id.push(returnObjID(item));
-    state.name.push(returnObjName(item));
+    if (state.id.includes(returnObjID(item))) {
+      handleRemoveItem(state, item);
+    } else {
+      state.id.push(returnObjID(item));
+      state.name.push(returnObjName(item));
+    }
 
     setFilterState(state);
+  };
+
+  const handleRemoveItem = (state: IFilterState, item: Props["item"]) => {
+    let indexOfID = filterState.id.indexOf(returnObjID(item));
+    let indexOfName = filterState.name.indexOf(returnObjName(item));
+
+    state.id.splice(indexOfID, 1);
+    state.name.splice(indexOfName, 1);
   };
 
   const handleSaveParams = () => {
@@ -122,14 +149,14 @@ export default function CustomDropdown({ label, filterData }: Props) {
   };
 
   return (
-    <div className="relative">
+    <div className="relative" ref={componentRef}>
       <span className="text-xs">{labelArr[label]}</span>
 
       <div
         onClick={handleFilterToggle}
         className="flex flex-row justify-between items-center cursor-pointer w-full mt-2 mb-5 border border-[#C2C9D8] hover:border-[#6F7383] rounded-lg text-[13px] py-[13.5px] px-3"
       >
-        <span className="text-main-gray truncate">
+        <span className="text-main-gray truncate pr-1">
           {handleRenderPlaceholder() || `ყველა ${labelArr[label]}`}
         </span>
 
