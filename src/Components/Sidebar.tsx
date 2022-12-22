@@ -62,8 +62,13 @@ export default function Sidebar({}: Props) {
       <hr />
       <RangePicker />
 
-      <div>
-        <CustomButton />
+      <div className="w-full pt-4 pb-5">
+        <CustomButton
+          onClick={() => console.log("I'm Searching!")}
+          text="ძებნა"
+          wrapperClassName="mx-auto"
+          className="text-sm font-bold py-2 w-[202px]"
+        />
       </div>
     </div>
   );

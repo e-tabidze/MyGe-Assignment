@@ -1,9 +1,26 @@
-import React from 'react'
+import React from "react";
 
-type Props = {}
+type Props = {
+  onClick: VoidFunction;
+  text: string;
+  className?: string;
+  wrapperClassName?: string;
+};
 
-export default function CustomButton({}: Props) {
+export default function CustomButton({
+  onClick,
+  text,
+  className,
+  wrapperClassName,
+}: Props) {
   return (
-    <div>CustomButton</div>
-  )
+    <div className={`w-fit ${wrapperClassName}`}>
+      <button
+        onClick={onClick}
+        className={`bg-main-orange text-white rounded-[6px] ${className}`}
+      >
+        {text}
+      </button>
+    </div>
+  );
 }

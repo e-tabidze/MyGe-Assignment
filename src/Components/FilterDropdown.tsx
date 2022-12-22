@@ -1,6 +1,7 @@
 import { SetStateAction, useState, Dispatch } from "react";
 import ArrowBottom from "../Assets/Icons/ArrowBottom";
 import { ICategory, IBargain, IManufacturer, IModel } from "../Types/general";
+import CustomButton from "./CustomButton";
 
 type Props = {
   label: string;
@@ -27,11 +28,6 @@ export default function CustomDropdown({ label, filterData }: Props) {
 
   const [filterActive, toggleFilterActive] = useState<boolean>(false);
 
-  const handleFilterToggle = () => {
-    if (label === "models" && filterData.length === 0) return;
-    toggleFilterActive(!filterActive);
-  };
-
   // User Defined Type-Guards
   function isManufacturer(obj: any): obj is IManufacturer {
     return "man_id" in obj;
@@ -49,6 +45,15 @@ export default function CustomDropdown({ label, filterData }: Props) {
     return "name" in obj;
   }
 
+  const handleFilterToggle = () => {
+    if (label === "models" && filterData.length === 0) return;
+    toggleFilterActive(!filterActive);
+  };
+
+  const handleResetFilter = () => {};
+
+  const handleSetFilter = () => {};
+
   return (
     <div className="relative">
       <span className="text-xs">{labelArr[label]}</span>
@@ -61,7 +66,9 @@ export default function CustomDropdown({ label, filterData }: Props) {
           {filterState || `ყველა ${labelArr[label]}`}
         </span>
 
-        <div className={`transition duration-300 ${filterActive && 'rotate-180'}`}>
+        <div
+          className={`transition duration-300 ${filterActive && "rotate-180"}`}
+        >
           <ArrowBottom />
         </div>
       </div>
@@ -88,7 +95,12 @@ export default function CustomDropdown({ label, filterData }: Props) {
               )
             )}
 
-            <div>{/* Buttons */}</div>
+            <div>
+              <CustomButton
+                onClick={() => console.log("I'm Picking!")}
+                text="არჩევა"
+              />
+            </div>
           </div>
         </div>
       )}
