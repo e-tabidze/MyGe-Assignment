@@ -50,16 +50,16 @@ export default function Sidebar({}: Props) {
 
       <div className="p-6 pb-1">
         {/* გარიგების ტიპი */}
-        <FilterDropdown label="bargainType" filterData={bargainType} />
+        <FilterDropdown label="ForRent" filterData={bargainType} />
 
         {/* მწარმოებელი */}
-        <FilterDropdown label="manufacturer" filterData={manufacturers} />
+        <FilterDropdown label="Mans" filterData={manufacturers} />
 
         {/* მოდელები */}
-        <FilterDropdown label="models" filterData={models} />
+        <FilterDropdown label="Mods" filterData={models} />
 
         {/* კატეგორია */}
-        <FilterDropdown label="category" filterData={categories} />
+        <FilterDropdown label="Cats" filterData={categories} />
       </div>
       <hr />
       <div className="pt-[18px] pb-11 px-6">

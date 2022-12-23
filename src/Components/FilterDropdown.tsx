@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, MouseEventHandler } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import ArrowBottom from "../Assets/Icons/ArrowBottom";
 import CheckSVG from "../Assets/Icons/CheckMark";
@@ -13,9 +13,10 @@ type Props = {
 };
 
 interface ILabelArr {
-  bargainType: string;
-  manufacturer: string;
-  category: string;
+  ForRent: string;
+  Mans: string;
+  Mods: string;
+  Cats: string;
   [key: string]: string;
 }
 
@@ -25,10 +26,17 @@ interface IFilterState {
 }
 
 const labelArr: ILabelArr = {
-  bargainType: "გარიგების ტიპი",
-  manufacturer: "მწარმოებელი",
-  models: "მოდელი",
-  category: "კატეგორია",
+  ForRent: "გარიგების ტიპი",
+  Mans: "მწარმოებელი",
+  Mods: "მოდელი",
+  Cats: "კატეგორია",
+};
+
+const joinArr: ILabelArr = {
+  ForRent: "",
+  Mans: "-",
+  Mods: ".",
+  Cats: ".",
 };
 
 export default function CustomDropdown({ label, filterData }: Props) {
@@ -40,6 +48,10 @@ export default function CustomDropdown({ label, filterData }: Props) {
     name: [],
   });
   const [filterActive, toggleFilterActive] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!filterActive) handleSaveParams(false);
+  }, [filterActive]);
 
   useEffect(() => {
     // Functionality for Closing Current Filter on Mouse Outside Click Event
@@ -81,7 +93,7 @@ export default function CustomDropdown({ label, filterData }: Props) {
 
     if (isBargain(item)) propID = item.id;
     if (isManufacturer(item)) propID = item.man_id;
-    if (isModel(item)) propID = item.model_id;
+    if (isModel(item)) propID = `${item.man_id}-${item.model_id}`;
     if (isCategory(item)) propID = item.category_id;
 
     return propID;
@@ -100,21 +112,20 @@ export default function CustomDropdown({ label, filterData }: Props) {
 
   // Filter State Actions
   const handleFilterToggle = () => {
-    if (label === "models" && filterData.length === 0) return;
+    if (label === "Mods" && filterData.length === 0) return;
     toggleFilterActive(!filterActive);
   };
 
-  const handleResetFilter = (
-    e: React.MouseEvent<HTMLSpanElement>
-  ) => {
+  const handleResetFilter = (e: React.MouseEvent<HTMLSpanElement>) => {
     e.stopPropagation();
     setFilterState({ id: [], name: [] });
+    handleSaveParams(true);
   };
 
   const handleSetFilter = (item: Props["item"]) => {
     let state: IFilterState = { ...filterState };
 
-    if (label === "bargainType" && !state.id.includes(returnObjID(item))) {
+    if (label === "ForRent" && !state.id.includes(returnObjID(item))) {
       state = { id: [], name: [] };
     }
 
@@ -136,8 +147,58 @@ export default function CustomDropdown({ label, filterData }: Props) {
     state.name.splice(indexOfName, 1);
   };
 
-  const handleSaveParams = () => {
-    console.log(filterState, "[FILTER STATE]");
+  const handleSaveParams = (reset: boolean) => {
+    if (label === "Mods") {
+      generateModelQuery(reset);
+    } else {
+      let queryObj = Object.fromEntries(searchParams);
+      if (filterState.id.length === 0 || reset) {
+        delete queryObj[label];
+      } else {
+        queryObj[`${label}`] = filterState.id.join(joinArr[label]);
+      }
+
+      setSearchParams(queryObj);
+    }
+
+    toggleFilterActive(false);
+  };
+
+  const generateModelQuery = (reset: boolean) => {
+    let queryObj = Object.fromEntries(searchParams);
+    let qString: string[] = [];
+    // if (reset) {
+
+    // } else {
+    let mansObj = queryObj.Mans?.split("-").map((obj) =>
+      obj.includes(".") ? obj.split(".")[0] : obj
+    );
+
+    if (reset) {
+      qString = mansObj;
+    } else {
+      let modelsArr = filterState.id.map((item) =>
+        typeof item === "string" ? item?.split("-") : ""
+      );
+
+      qString = mansObj?.map((item) => {
+        let innerStr = item;
+
+        modelsArr.forEach((model) => {
+          if (model.length > 0) {
+            if (item === model[0]) {
+              innerStr += `.${model[1]}`;
+            }
+          }
+        });
+
+        return innerStr;
+      });
+    }
+    queryObj.Mans = qString?.join("-");
+    // }
+
+    setSearchParams(queryObj);
   };
 
   const handleRenderPlaceholder = () => {
@@ -186,9 +247,9 @@ export default function CustomDropdown({ label, filterData }: Props) {
       {filterActive && (
         <div className="absolute top-[90px] w-full border rounded-xl bg-white box-border z-10">
           <div className="w-full py-2 max-h-[300px] overflow-x-scroll">
-            {(label === "manufacturer" || label === "models") && (
+            {(label === "Mans" || label === "Mods") && (
               <div className="flex flex-row justify-between items-center text-sm px-4 py-2">
-                <span>{label === "manufacturer" ? "პოპულარული" : "BMW"}</span>
+                <span>{label === "Mans" ? "პოპულარული" : "BMW"}</span>
                 <div className="h-[1px] w-14 bg-[#e9e9f0] text-[#454857]"></div>
               </div>
             )}
@@ -220,7 +281,7 @@ export default function CustomDropdown({ label, filterData }: Props) {
               ფილტრის გასუფთავება
             </span>
             <CustomButton
-              onClick={handleSaveParams}
+              onClick={() => handleSaveParams(false)}
               text="არჩევა"
               wrapperClassName="px-2 py-1 text-xs"
             />
