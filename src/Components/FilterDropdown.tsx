@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, MouseEventHandler } from "react";
 import { useSearchParams } from "react-router-dom";
 import ArrowBottom from "../Assets/Icons/ArrowBottom";
 import CheckSVG from "../Assets/Icons/CheckMark";
@@ -108,7 +108,10 @@ export default function CustomDropdown({ label, filterData }: Props) {
     toggleFilterActive(!filterActive);
   };
 
-  const handleResetFilter = () => {
+  const handleResetFilter = (
+    e: React.MouseEvent<SVGSVGElement, MouseEvent>
+  ) => {
+    e.stopPropagation();
     setFilterState(initialFilterState);
   };
 
@@ -159,21 +162,25 @@ export default function CustomDropdown({ label, filterData }: Props) {
 
       <div
         onClick={handleFilterToggle}
-        className="flex flex-row justify-between items-center cursor-pointer w-full mt-2 mb-5 border border-[#C2C9D8] hover:border-[#6F7383] rounded-lg text-[13px] py-[13.5px] px-3"
+        className="flex flex-row justify-between items-center cursor-pointer w-full mt-2 mb-5 border border-[#C2C9D8] hover:border-[#6F7383] rounded-lg text-[13px] py-[13.5px] px-3 z-10"
       >
-        <span className="text-main-gray truncate pr-1">
+        <span className="text-main-gray truncate pr-1 max-w-[150px]">
           {handleRenderPlaceholder() || `ყველა ${labelArr[label]}`}
         </span>
 
         <div
-          className={`flex justify-center items-center w-4 h-4 ${
-            filterState.id.length > 0 ? "" : "transition duration-300 "
-          } ${filterActive && "rotate-180"}`}
+          className={`flex justify-center items-center w-6 h-6 transition duration-300 rounded-full ${
+            filterState.id.length > 0 ? "hover:bg-custom-gray" : ""
+          }`}
         >
           {filterState.id.length > 0 ? (
-            <DeleteSVG onClick={handleResetFilter} className="z-10" />
+            <DeleteSVG onClick={handleResetFilter} />
           ) : (
-            <ArrowBottom />
+            <ArrowBottom
+              className={`transition duration-300 ${
+                filterActive && "rotate-180 "
+              }`}
+            />
           )}
         </div>
       </div>
