@@ -14,10 +14,10 @@ export default function CustomButton({
   wrapperClassName,
 }: Props) {
   return (
-    <div className={`w-fit ${wrapperClassName}`}>
+    <div className={`w-fit bg-main-orange rounded-md ${wrapperClassName}`}>
       <button
         onClick={onClick}
-        className={`bg-main-orange text-white rounded-[6px] ${className}`}
+        className={`text-white ${className}`}
       >
         {text}
       </button>

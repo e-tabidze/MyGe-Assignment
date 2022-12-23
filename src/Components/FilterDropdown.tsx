@@ -105,7 +105,7 @@ export default function CustomDropdown({ label, filterData }: Props) {
   };
 
   const handleResetFilter = (
-    e: React.MouseEvent<SVGSVGElement, MouseEvent>
+    e: React.MouseEvent<HTMLSpanElement>
   ) => {
     e.stopPropagation();
     setFilterState({ id: [], name: [] });
@@ -170,7 +170,9 @@ export default function CustomDropdown({ label, filterData }: Props) {
           }`}
         >
           {filterState.id.length > 0 ? (
-            <DeleteSVG onClick={handleResetFilter} />
+            <span onClick={handleResetFilter}>
+              <DeleteSVG />
+            </span>
           ) : (
             <ArrowBottom
               className={`transition duration-300 ${
@@ -182,8 +184,8 @@ export default function CustomDropdown({ label, filterData }: Props) {
       </div>
 
       {filterActive && (
-        <div className="absolute top-[90px] w-full bg-transparent z-10">
-          <div className="w-full py-2 border rounded-xl bg-white box-border max-h-[300px] overflow-x-scroll">
+        <div className="absolute top-[90px] w-full border rounded-xl bg-white box-border z-10">
+          <div className="w-full py-2 max-h-[300px] overflow-x-scroll">
             {(label === "manufacturer" || label === "models") && (
               <div className="flex flex-row justify-between items-center text-sm px-4 py-2">
                 <span>{label === "manufacturer" ? "პოპულარული" : "BMW"}</span>
@@ -209,10 +211,19 @@ export default function CustomDropdown({ label, filterData }: Props) {
                 <span>{returnObjName(item)}</span>
               </div>
             ))}
-
-            <div>
-              <CustomButton onClick={handleSaveParams} text="არჩევა" />
-            </div>
+          </div>
+          <div className="flex flex-row justify-between items-center w-full p-2 border-t">
+            <span
+              onClick={handleResetFilter}
+              className="w-fit bg-transparent border-none text-xs text-main-gray px-2 cursor-pointer"
+            >
+              ფილტრის გასუფთავება
+            </span>
+            <CustomButton
+              onClick={handleSaveParams}
+              text="არჩევა"
+              wrapperClassName="px-2 py-1 text-xs"
+            />
           </div>
         </div>
       )}
