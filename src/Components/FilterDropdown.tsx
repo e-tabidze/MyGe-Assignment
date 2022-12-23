@@ -167,9 +167,7 @@ export default function CustomDropdown({ label, filterData }: Props) {
   const generateModelQuery = (reset: boolean) => {
     let queryObj = Object.fromEntries(searchParams);
     let qString: string[] = [];
-    // if (reset) {
 
-    // } else {
     let mansObj = queryObj.Mans?.split("-").map((obj) =>
       obj.includes(".") ? obj.split(".")[0] : obj
     );
@@ -196,7 +194,6 @@ export default function CustomDropdown({ label, filterData }: Props) {
       });
     }
     queryObj.Mans = qString?.join("-");
-    // }
 
     setSearchParams(queryObj);
   };
