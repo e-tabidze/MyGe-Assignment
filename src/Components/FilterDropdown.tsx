@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import ArrowBottom from "../Assets/Icons/ArrowBottom";
 import CheckSVG from "../Assets/Icons/CheckMark";
+import DeleteSVG from "../Assets/Icons/DeleteCross";
 import { ICategory, IBargain, IManufacturer, IModel } from "../Types/general";
 import CustomButton from "./CustomButton";
 
@@ -44,11 +45,13 @@ export default function CustomDropdown({ label, filterData }: Props) {
   const [filterActive, toggleFilterActive] = useState<boolean>(false);
 
   useEffect(() => {
+    // Functionality for Closing Current Filter on Mouse Outside Click Event
     function handleClickListener(event: MouseEvent) {
       if (
         componentRef.current &&
         !componentRef.current.contains(event.target)
       ) {
+        console.log(componentRef.current, "[CURRENT CLICK]");
         toggleFilterActive(false);
       }
     }
@@ -105,7 +108,9 @@ export default function CustomDropdown({ label, filterData }: Props) {
     toggleFilterActive(!filterActive);
   };
 
-  const handleResetFilter = () => {};
+  const handleResetFilter = () => {
+    setFilterState(initialFilterState);
+  };
 
   const handleSetFilter = (item: Props["item"]) => {
     // Using {...filterState} will Share State Between Reusable Components
@@ -161,9 +166,15 @@ export default function CustomDropdown({ label, filterData }: Props) {
         </span>
 
         <div
-          className={`transition duration-300 ${filterActive && "rotate-180"}`}
+          className={`flex justify-center items-center w-4 h-4 ${
+            filterState.id.length > 0 ? "" : "transition duration-300 "
+          } ${filterActive && "rotate-180"}`}
         >
-          <ArrowBottom />
+          {filterState.id.length > 0 ? (
+            <DeleteSVG onClick={handleResetFilter} className="z-10" />
+          ) : (
+            <ArrowBottom />
+          )}
         </div>
       </div>
 
