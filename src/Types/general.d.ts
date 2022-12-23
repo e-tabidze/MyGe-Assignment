@@ -17,6 +17,11 @@ export interface IModel {
   model_name: string;
 }
 
+export interface IModelData {
+  manName: string,
+  manData: IModel[]
+}
+
 export interface ICategory {
   category_id: number;
   category_type: number;

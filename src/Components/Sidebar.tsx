@@ -6,7 +6,7 @@ import {
   getManufacturers,
   getModels,
 } from "../Services/filter.service";
-import { ICategory, IManufacturer } from "../Types/general";
+import { ICategory, IManufacturer, IModelData } from "../Types/general";
 
 import ClickSelector from "./ClickSelector";
 import CustomButton from "./CustomButton";
@@ -19,15 +19,22 @@ export default function Sidebar({}: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [manufacturers, setManufacturers] = useState<IManufacturer[]>([]);
-  const [models, setModels] = useState([]);
+  const [models, setModels] = useState<IModelData[]>([]);
 
   const [chosenMan, setChosenMan] = useState<number | null>(null);
 
   useEffect(() => {
     handleGetManufacturers();
     handleGetCategories();
-    handleGetModels();
   }, []);
+
+  useEffect(() => {
+    let searchObj = Object.fromEntries(searchParams);
+
+    if (searchObj.Mans) {
+      handleGetModels();
+    }
+  }, [searchParams]);
 
   const handleGetManufacturers = async () => {
     const result = await getManufacturers();
@@ -40,7 +47,20 @@ export default function Sidebar({}: Props) {
   };
 
   const handleGetModels = async () => {
-    const result = await getModels(chosenMan || 3);
+    let searchObj = Object.fromEntries(searchParams);
+    let mansArr = searchObj.Mans.split("-");
+    let endData = mansArr.map(async (man) => {
+      let manName = manufacturers.filter((item) => item.man_id === man)[0]
+        .man_name;
+
+      let manData = await getModels(man);
+      return {
+        manName,
+        manData,
+      };
+    });
+
+    let result = await Promise.all(endData);
     setModels(result);
   };
 
