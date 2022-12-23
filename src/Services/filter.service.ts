@@ -6,7 +6,7 @@ export const getManufacturers = async () => {
     .then((res) => res.data);
 };
 
-export const getModels = async (man_id: number) => {
+export const getModels = async (man_id: string) => {
   let lang = localStorage.getItem("lang");
 
   return await api2Service
