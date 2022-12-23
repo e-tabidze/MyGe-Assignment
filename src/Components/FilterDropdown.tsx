@@ -3,13 +3,21 @@ import { useSearchParams } from "react-router-dom";
 import ArrowBottom from "../Assets/Icons/ArrowBottom";
 import CheckSVG from "../Assets/Icons/CheckMark";
 import DeleteSVG from "../Assets/Icons/DeleteCross";
-import { ICategory, IBargain, IManufacturer, IModel } from "../Types/general";
+import {
+  ICategory,
+  IBargain,
+  IManufacturer,
+  IModelData,
+} from "../Types/general";
+
+import { returnObjID, returnObjName } from "../Helper/TypeGuards";
+
 import CustomButton from "./CustomButton";
 
 type Props = {
   label: string;
-  filterData: IBargain[] | IManufacturer[] | IModel[] | ICategory[];
-  item?: IBargain | IManufacturer | IModel | ICategory;
+  filterData: IBargain[] | IManufacturer[] | IModelData[] | ICategory[];
+  item?: IBargain | IManufacturer | IModelData | ICategory;
 };
 
 interface ILabelArr {
@@ -70,45 +78,6 @@ export default function CustomDropdown({ label, filterData }: Props) {
       document.removeEventListener("mousedown", handleClickListener);
     };
   }, [componentRef]);
-
-  // User Defined Type-Guards
-  function isManufacturer(obj: any): obj is IManufacturer {
-    return "man_id" in obj;
-  }
-
-  function isModel(obj: any): obj is IModel {
-    return "model_name" in obj;
-  }
-
-  function isCategory(obj: any): obj is ICategory {
-    return "category_id" in obj;
-  }
-
-  function isBargain(obj: any): obj is IBargain {
-    return "name" in obj;
-  }
-
-  const returnObjID = (item: Props["item"]) => {
-    let propID;
-
-    if (isBargain(item)) propID = item.id;
-    if (isManufacturer(item)) propID = item.man_id;
-    if (isModel(item)) propID = `${item.man_id}-${item.model_id}`;
-    if (isCategory(item)) propID = item.category_id;
-
-    return propID;
-  };
-
-  const returnObjName = (item: Props["item"]) => {
-    let propName;
-
-    if (isBargain(item)) propName = item.name;
-    if (isManufacturer(item)) propName = item.man_name;
-    if (isModel(item)) propName = item.model_name;
-    if (isCategory(item)) propName = item.title;
-
-    return propName;
-  };
 
   // Filter State Actions
   const handleFilterToggle = () => {
