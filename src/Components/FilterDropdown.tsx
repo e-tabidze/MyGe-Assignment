@@ -24,11 +24,6 @@ interface IFilterState {
   name: Array<string | undefined>;
 }
 
-const initialFilterState: IFilterState = {
-  id: [],
-  name: [],
-};
-
 const labelArr: ILabelArr = {
   bargainType: "გარიგების ტიპი",
   manufacturer: "მწარმოებელი",
@@ -40,8 +35,10 @@ export default function CustomDropdown({ label, filterData }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const componentRef = useRef<any>(null);
 
-  const [filterState, setFilterState] =
-    useState<IFilterState>(initialFilterState);
+  const [filterState, setFilterState] = useState<IFilterState>({
+    id: [],
+    name: [],
+  });
   const [filterActive, toggleFilterActive] = useState<boolean>(false);
 
   useEffect(() => {
@@ -51,7 +48,6 @@ export default function CustomDropdown({ label, filterData }: Props) {
         componentRef.current &&
         !componentRef.current.contains(event.target)
       ) {
-        console.log(componentRef.current, "[CURRENT CLICK]");
         toggleFilterActive(false);
       }
     }
@@ -112,15 +108,15 @@ export default function CustomDropdown({ label, filterData }: Props) {
     e: React.MouseEvent<SVGSVGElement, MouseEvent>
   ) => {
     e.stopPropagation();
-    setFilterState(initialFilterState);
+    setFilterState({ id: [], name: [] });
   };
 
   const handleSetFilter = (item: Props["item"]) => {
-    // Using {...filterState} will Share State Between Reusable Components
-    let state: IFilterState = {
-      id: [...filterState.id],
-      name: [...filterState.name],
-    };
+    let state: IFilterState = { ...filterState };
+
+    if (label === "bargainType" && !state.id.includes(returnObjID(item))) {
+      state = { id: [], name: [] };
+    }
 
     if (state.id.includes(returnObjID(item))) {
       handleRemoveItem(state, item);
