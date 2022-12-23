@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import ArrowBottom from "../Assets/Icons/ArrowBottom";
 import CheckSVG from "../Assets/Icons/CheckMark";
@@ -8,16 +8,26 @@ import {
   IBargain,
   IManufacturer,
   IModelData,
+  IModel,
 } from "../Types/general";
 
-import { returnObjID, returnObjName } from "../Helper/TypeGuards";
+import {
+  returnModelData,
+  returnObjID,
+  returnObjName,
+} from "../Helper/TypeGuards";
 
 import CustomButton from "./CustomButton";
 
 type Props = {
   label: string;
-  filterData: IBargain[] | IManufacturer[] | IModelData[] | ICategory[];
-  item?: IBargain | IManufacturer | IModelData | ICategory;
+  filterData:
+    | IBargain[]
+    | IManufacturer[]
+    | IModelData[]
+    | ICategory[]
+    | IModel[];
+  item?: IBargain | IManufacturer | IModelData | ICategory | IModel;
 };
 
 interface ILabelArr {
@@ -47,7 +57,7 @@ const joinArr: ILabelArr = {
   Cats: ".",
 };
 
-export default function CustomDropdown({ label, filterData }: Props) {
+export default function FilterDropdown({ label, filterData }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const componentRef = useRef<any>(null);
 
@@ -213,7 +223,7 @@ export default function CustomDropdown({ label, filterData }: Props) {
       {filterActive && (
         <div className="absolute top-[90px] w-full border rounded-xl bg-white box-border z-10">
           <div className="w-full py-2 max-h-[300px] overflow-x-scroll">
-            {(label === "Mans" || label === "Mods") && (
+            {/* {(label === "Mans" || label === "Mods") && (
               <div className="flex flex-row justify-between items-center text-sm px-4 py-2">
                 <span>{label === "Mans" ? "პოპულარული" : "BMW"}</span>
                 <div className="h-[1px] w-14 bg-[#e9e9f0] text-[#454857]"></div>
@@ -237,7 +247,26 @@ export default function CustomDropdown({ label, filterData }: Props) {
                 </div>
                 <span>{returnObjName(item)}</span>
               </div>
-            ))}
+            ))} */}
+            {label === "Mods" ? (
+              filterData.map((item) => (
+                <Scrollable
+                  key={`man-key-${returnObjName(item)}`}
+                  label={label}
+                  manName={returnObjName(item)}
+                  filterData={returnModelData(item)}
+                  filterState={filterState}
+                  handleSetFilter={handleSetFilter}
+                />
+              ))
+            ) : (
+              <Scrollable
+                label={label}
+                filterData={filterData}
+                filterState={filterState}
+                handleSetFilter={handleSetFilter}
+              />
+            )}
           </div>
           <div className="flex flex-row justify-between items-center w-full p-2 border-t">
             <span
@@ -257,3 +286,51 @@ export default function CustomDropdown({ label, filterData }: Props) {
     </div>
   );
 }
+
+type ScrollableTypes = {
+  key?: string;
+  label: string;
+  manName?: string;
+  filterData: Props["filterData"];
+  filterState: IFilterState;
+  handleSetFilter: (item: Props["item"]) => void;
+};
+
+const Scrollable = ({
+  key,
+  label,
+  manName,
+  filterData,
+  handleSetFilter,
+  filterState,
+}: ScrollableTypes) => {
+  return (
+    <React.Fragment key={key}>
+      {(label === "Mans" || label === "Mods") && (
+        <div className="flex flex-row justify-between items-center text-sm px-4 py-2">
+          <span>{label === "Mans" ? "პოპულარული" : manName}</span>
+          <div className="h-[1px] w-14 bg-[#e9e9f0] text-[#454857]"></div>
+        </div>
+      )}
+
+      {filterData.map((item: Props["item"]) => (
+        <div
+          key={returnObjID(item)}
+          onClick={() => handleSetFilter(item)}
+          className="flex flex-row cursor-pointer items-center px-4 py-2 text-main-gray hover:text-secondary-black"
+        >
+          <div
+            className={`flex justify-center items-center w-[14px] h-[14px] border  ${
+              filterState.id.includes(returnObjID(item))
+                ? "bg-main-orange border-main-orange"
+                : "bg-white border-[#a4aec1]"
+            } mr-3 rounded`}
+          >
+            <CheckSVG />
+          </div>
+          <span>{returnObjName(item)}</span>
+        </div>
+      ))}
+    </React.Fragment>
+  );
+};

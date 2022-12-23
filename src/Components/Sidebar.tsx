@@ -61,6 +61,7 @@ export default function Sidebar({}: Props) {
     });
 
     let result = await Promise.all(endData);
+    console.log(result, '[RES]')
     setModels(result);
   };
 

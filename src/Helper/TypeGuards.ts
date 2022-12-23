@@ -8,8 +8,13 @@ import {
 
 type Props = {
   label: string;
-  filterData: IBargain[] | IManufacturer[] | IModelData[] | ICategory[];
-  item?: IBargain | IManufacturer | IModelData | ICategory;
+  filterData:
+    | IBargain[]
+    | IManufacturer[]
+    | IModelData[]
+    | ICategory[]
+    | IModel[];
+  item?: IBargain | IManufacturer | IModelData | ICategory | IModel;
 };
 
 function isManufacturer(obj: any): obj is IManufacturer {
@@ -26,6 +31,10 @@ function isCategory(obj: any): obj is ICategory {
 
 function isBargain(obj: any): obj is IBargain {
   return "name" in obj;
+}
+
+function isModelData(obj: any): obj is IModelData {
+  return "manData" in obj;
 }
 
 const returnObjID = (item: Props["item"]) => {
@@ -46,11 +55,16 @@ const returnObjName = (item: Props["item"]) => {
   if (isManufacturer(item)) propName = item.man_name;
   if (isModel(item)) propName = item.model_name;
   if (isCategory(item)) propName = item.title;
+  if (isModelData(item)) propName = item.manName;
 
   return propName;
 };
 
-export {
-    returnObjID,
-    returnObjName
-}
+const returnModelData = (item: Props["item"]) => {
+  let data: IModel[] = [];
+  if (isModelData(item)) data = item.manData;
+
+  return data;
+};
+
+export { returnObjID, returnObjName, returnModelData };
