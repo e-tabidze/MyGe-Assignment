@@ -40,7 +40,7 @@ export default function SortDropdown({ label }: Props) {
         (item: ISortObj) => item.id === searchObj[label]
       );
       setSortID(searchObj[label]);
-      //   setSortValue(sortName);
+      setSortValue(sortName?.title || "");
       console.log(sortName);
     }
   };
