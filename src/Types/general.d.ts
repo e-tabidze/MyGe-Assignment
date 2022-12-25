@@ -59,7 +59,8 @@ export interface IProduct {
   fuel_type_id: keyof typeof EnumTypeFuelType;
   price_value: number; // ლარებში
   price_usd: number;
-
+  stickers: number | null;
+  
   prom_color: number; // ციანიდის ფერი
 }
 

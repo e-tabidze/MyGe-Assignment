@@ -7,6 +7,9 @@ module.exports = {
         "upper": "0px 2px 16px rgba(39, 42, 55, 0.13)",
       },
       colors: {
+        "main-cyan": "#59D8C9",
+        "secondary-cyan": "#F0F9F7",
+        "third-cyan": "#CEE8E5",
         "custom-gray": "#f2f3f6",
         "main-green": "#26B753",
         "main-orange": "#FD4100",
