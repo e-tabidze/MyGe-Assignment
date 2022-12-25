@@ -57,11 +57,10 @@ export interface IProduct {
   right_wheel: boolean;
   gear_type_id: keyof typeof EnumTypeGearType;
   fuel_type_id: keyof typeof EnumTypeFuelType;
-  price_value: number; // ლარებში
+  price_value: number;
   price_usd: number;
   stickers: number | null;
-  
-  prom_color: number; // ციანიდის ფერი
+  prom_color: number;
 }
 
 export interface IProducts {

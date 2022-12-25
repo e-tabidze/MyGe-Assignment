@@ -37,7 +37,7 @@ export default function HomePage({}: Props) {
     handleSearch();
     handleGetManufacturers();
     handleGetCategories();
-    return () => {
+    return () => {  
       setModels([]);
       setManufacturers([]);
     };

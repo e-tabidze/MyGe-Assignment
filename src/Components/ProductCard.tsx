@@ -49,8 +49,6 @@ export default function ProductCard({
     setManName(man || "");
   };
 
-  let dateToday = new Date();
-
   const calculateEngineVolume = () => {
     let engineVolume = product.engine_volume.toString();
     return engineVolume.slice(0, 1) + "." + engineVolume.slice(1, 2);
@@ -61,6 +59,25 @@ export default function ProductCard({
 
     let value = currency === "3" ? product.price_value : product.price_usd;
     return value.toLocaleString("en");
+  };
+
+  const handleDateRender = () => {
+    let dateNow = Date.now();
+
+    let diff = dateNow - Date.parse(product.order_date);
+
+    let suffix = "";
+
+    var diffDays = Math.floor(diff / 86400000); // days
+    var diffWeeks = Math.floor(diff / 86400000 / 7); // days
+    var diffHrs = Math.floor((diff % 86400000) / 3600000); // hours
+    var diffMins = Math.round(((diff % 86400000) % 3600000) / 60000);
+
+    if(diffMins > 0) suffix = `${diffMins} წუთის წინ`;
+    if(diffHrs > 0) suffix = `${diffHrs} საათის წინ`;
+    if(diffDays > 0) suffix = `${diffDays} დღის წინ`;
+    if(diffWeeks > 0) suffix = `${diffWeeks} კვირის წინ`
+    return suffix;
   };
 
   return (
@@ -155,13 +172,7 @@ export default function ProductCard({
           </div>
           <div className="flex justify-between">
             <div className="text-main-gray text-xs">
-              {product.views} ნახვა •{" "}
-              {Math.ceil(
-                // @ts-ignore
-                (Date.parse(dateToday) - Date.parse(product.order_date)) /
-                  86400000
-              )}{" "}
-              დღის წინ
+              {`${product.views} ნახვა • ${handleDateRender()}`}
             </div>
             <div className="flex w-[90px] justify-between">
               <NotesSVG /> <ScalesSVG /> <HeartSVG />
