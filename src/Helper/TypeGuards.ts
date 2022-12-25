@@ -38,18 +38,19 @@ function isModelData(obj: any): obj is IModelData {
 }
 
 const returnObjID = (item: Props["item"]) => {
-  let propID;
+  let propID: number = 0;
 
   if (isBargain(item)) propID = item.id;
-  if (isManufacturer(item)) propID = item.man_id;
-  if (isModel(item)) propID = `${item.man_id}-${item.model_id}`;
+  if (isManufacturer(item)) propID = JSON.parse(item.man_id);
+  if (isModel(item)) propID = item.model_id;
   if (isCategory(item)) propID = item.category_id;
+  if (isModelData(item)) propID = JSON.parse(item.manID);
 
-  return propID;
+  return JSON.stringify(propID);
 };
 
 const returnObjName = (item: Props["item"]) => {
-  let propName;
+  let propName: string = '';
 
   if (isBargain(item)) propName = item.name;
   if (isManufacturer(item)) propName = item.man_name;
@@ -60,6 +61,14 @@ const returnObjName = (item: Props["item"]) => {
   return propName;
 };
 
+const returnModelID = (item: Props['item']) => {
+    let modelID = ""
+    
+    if(isModel(item)) modelID = `${item.man_id}-${item.model_id}`;
+
+    return modelID;
+}
+
 const returnModelData = (item: Props["item"]) => {
   let data: IModel[] = [];
   if (isModelData(item)) data = item.manData;
@@ -67,4 +76,4 @@ const returnModelData = (item: Props["item"]) => {
   return data;
 };
 
-export { returnObjID, returnObjName, returnModelData };
+export { returnObjID, returnObjName, returnModelID, returnModelData };
