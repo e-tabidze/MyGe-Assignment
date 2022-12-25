@@ -22,10 +22,10 @@ export const getCategories = async () => {
     .then((res) => res.data.data);
 };
 
-export const getProducts = async () => {
+export const getProducts = async (url: string) => {
   let lang = localStorage.getItem("lang");
 
   return await api2Service
-    .get(`/${lang || "ka"}/products`)
+    .get(`/${lang || "ka"}/products${url}`)
     .then((res) => res.data.data);
 };

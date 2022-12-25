@@ -16,9 +16,10 @@ export default function HomePage({}: Props) {
   const [models, setModels] = useState<IModel[]>([]);
   const [manId, setManId] = useState<string>("");
   const [manufacturers, setManufacturers] = useState<IManufacturer[]>([]);
-
+  const [page, setPage] = useState(1);
+  
   useEffect(() => {
-    fetchProducts();
+    handleSearch();
     handleGetManufacturers();
     // handleGetModels();
     return () => {
@@ -27,10 +28,10 @@ export default function HomePage({}: Props) {
     };
   }, []);
 
-  const fetchProducts = async () => {
-    let result = await getProducts();
-    setProducts(result);
-  };
+  // const fetchProducts = async () => {
+  //   let result = await getProducts();
+  //   setProducts(result);
+  // };
 
   const handleGetManufacturers = async () => {
     const result = await getManufacturers();
@@ -49,12 +50,22 @@ export default function HomePage({}: Props) {
     return manufacturer;
   };
 
+  const handleSearch = async () => {
+    let url = window.location.search;
+    console.log(url, ' SEARCH STRING');
+
+    let result = await getProducts(url);
+    console.log(result, ' [PRODUCTS RESULT]');
+
+    setProducts(result);
+  };
+
   return (
-    <div className="w-full h-screen bg-custom-gray">
+    <div className="w-full bg-custom-gray">
       <div className="max-w-[1050px] mx-auto py-3">
         <BreadCrumbs />
         <div className="w-full flex flex-row">
-          <Sidebar manufacturers={manufacturers} />
+          <Sidebar manufacturers={manufacturers} handleSearch={handleSearch} />
           <div className="ml-5 w-[780px]">
             <div className="flex flex-row justify-between items-center mb-4">
               <span>{products?.meta.total} განცხადება</span>
