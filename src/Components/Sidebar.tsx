@@ -13,33 +13,28 @@ import CustomButton from "./CustomButton";
 import FilterDropdown from "./FilterDropdown";
 import RangePicker from "./RangePicker";
 
-type Props = {};
+type Props = {
+  manufacturers: IManufacturer[];
+};
 
-export default function Sidebar({}: Props) {
+export default function Sidebar({ manufacturers }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const [categories, setCategories] = useState<ICategory[]>([]);
-  const [manufacturers, setManufacturers] = useState<IManufacturer[]>([]);
   const [models, setModels] = useState<IModelData[]>([]);
 
   const [chosenMan, setChosenMan] = useState<number | null>(null);
 
   useEffect(() => {
-    handleGetManufacturers();
     handleGetCategories();
   }, []);
 
   useEffect(() => {
     let searchObj = Object.fromEntries(searchParams);
 
-    if (searchObj.Mans) {
+    if (searchObj.Mans && manufacturers.length > 0) {
       handleGetModels();
     }
-  }, [searchParams]);
-
-  const handleGetManufacturers = async () => {
-    const result = await getManufacturers();
-    setManufacturers(result);
-  };
+  }, [searchParams, manufacturers]);
 
   const handleGetCategories = async () => {
     const result = await getCategories();
@@ -48,20 +43,21 @@ export default function Sidebar({}: Props) {
 
   const handleGetModels = async () => {
     let searchObj = Object.fromEntries(searchParams);
-    let mansArr = searchObj.Mans.split("-");
+    let mansArr = searchObj.Mans?.split("-").map((obj) =>
+      obj.includes(".") ? obj.split(".")[0] : obj
+    );
     let endData = mansArr.map(async (man) => {
-      let manName = manufacturers.filter((item) => item.man_id === man)[0]
-        .man_name;
-
+      let manObj = manufacturers.filter((item) => item.man_id === man)[0];
       let manData = await getModels(man);
       return {
-        manName,
+        manID: manObj.man_id,
+        manName: manObj.man_name,
         manData,
       };
     });
 
     let result = await Promise.all(endData);
-    console.log(result, '[RES]')
+
     setModels(result);
   };
 

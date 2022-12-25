@@ -13,6 +13,7 @@ import {
 
 import {
   returnModelData,
+  returnModelID,
   returnObjID,
   returnObjName,
 } from "../Helper/TypeGuards";
@@ -39,8 +40,8 @@ interface ILabelArr {
 }
 
 interface IFilterState {
-  id: Array<string | number | undefined>;
-  name: Array<string | undefined>;
+  id: Array<string>;
+  name: Array<string>;
 }
 
 const labelArr: ILabelArr = {
@@ -59,7 +60,8 @@ const joinArr: ILabelArr = {
 
 export default function FilterDropdown({ label, filterData }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
-  const componentRef = useRef<any>(null);
+  const divRef = useRef<any>(null);
+  const componentRef = useRef<any>({ isFirstRender: true });
 
   const [filterState, setFilterState] = useState<IFilterState>({
     id: [],
@@ -68,16 +70,14 @@ export default function FilterDropdown({ label, filterData }: Props) {
   const [filterActive, toggleFilterActive] = useState<boolean>(false);
 
   useEffect(() => {
-    if (!filterActive) handleSaveParams(false);
+    if (!filterActive && !componentRef.current.isFirstRender)
+    handleSaveParams(false);
   }, [filterActive]);
 
   useEffect(() => {
     // Functionality for Closing Current Filter on Mouse Outside Click Event
     function handleClickListener(event: MouseEvent) {
-      if (
-        componentRef.current &&
-        !componentRef.current.contains(event.target)
-      ) {
+      if (divRef.current && !divRef.current.contains(event.target)) {
         toggleFilterActive(false);
       }
     }
@@ -87,11 +87,82 @@ export default function FilterDropdown({ label, filterData }: Props) {
     return () => {
       document.removeEventListener("mousedown", handleClickListener);
     };
-  }, [componentRef]);
+  }, [divRef]);
+
+  useEffect(() => {
+    if (searchParams && filterData.length > 0) {
+      handleSetData();
+    }
+  }, [searchParams, filterData]);
+
+  const handleSetData = () => {
+    let existingData: string | null = searchParams.get(
+      label === "Mods" ? "Mans" : label
+    );
+    let stateObj: IFilterState = {
+      id: [],
+      name: [],
+    };
+    switch (label) {
+      case "ForRent":
+        filterData.forEach((item: Props["item"]) => {
+          if (existingData && returnObjID(item) === existingData) {
+            stateObj.id.push(returnObjID(item));
+            stateObj.name.push(returnObjName(item));
+          }
+        });
+        break;
+      case "Mans":
+        let mansArr =
+          existingData
+            ?.split("-")
+            .map((str) => (str.includes(".") ? str.split(".")[0] : str)) || [];
+
+        filterData.forEach((item: Props["item"]) => {
+          if (existingData && mansArr.includes(returnObjID(item))) {
+            stateObj.id.push(returnObjID(item));
+            stateObj.name.push(returnObjName(item));
+          }
+        });
+        break;
+      case "Mods":
+        existingData?.split("-").forEach((str) => {
+          if (str.includes(".")) {
+            let innerModsArr = str.split(".");
+            let manID = innerModsArr.shift();
+            filterData.forEach((data: Props["item"]) => {
+              if (returnObjID(data) === manID) {
+                returnModelData(data).forEach((modelItem: IModel) => {
+                  if (innerModsArr?.includes(returnObjID(modelItem))) {
+                    stateObj.id.push(`${manID}-${returnObjID(modelItem)}`);
+                    stateObj.name.push(returnObjName(modelItem));
+                  }
+                });
+              }
+            });
+          }
+        });
+        break;
+      case "Cats":
+        let catArr = existingData?.split(".");
+        filterData.forEach((item) => {
+          if (catArr?.includes(returnObjID(item))) {
+            stateObj.id.push(returnObjID(item));
+            stateObj.name.push(returnObjName(item));
+          }
+        });
+        break;
+      default:
+        break;
+    }
+    // console.log(stateObj, label, 'SETTING')
+    setFilterState(stateObj);
+  };
 
   // Filter State Actions
   const handleFilterToggle = () => {
     if (label === "Mods" && filterData.length === 0) return;
+    if(componentRef.current.isFirstRender) componentRef.current.isFirstRender = false;
     toggleFilterActive(!filterActive);
   };
 
@@ -108,10 +179,14 @@ export default function FilterDropdown({ label, filterData }: Props) {
       state = { id: [], name: [] };
     }
 
-    if (state.id.includes(returnObjID(item))) {
+    if (
+      state.id.includes(
+        label === "Mods" ? returnModelID(item) : returnObjID(item)
+      )
+    ) {
       handleRemoveItem(state, item);
     } else {
-      state.id.push(returnObjID(item));
+      state.id.push(label === "Mods" ? returnModelID(item) : returnObjID(item));
       state.name.push(returnObjName(item));
     }
 
@@ -119,7 +194,9 @@ export default function FilterDropdown({ label, filterData }: Props) {
   };
 
   const handleRemoveItem = (state: IFilterState, item: Props["item"]) => {
-    let indexOfID = filterState.id.indexOf(returnObjID(item));
+    let indexOfID = filterState.id.indexOf(
+      label === "Mods" ? returnModelID(item) : returnObjID(item)
+    );
     let indexOfName = filterState.name.indexOf(returnObjName(item));
 
     state.id.splice(indexOfID, 1);
@@ -127,14 +204,27 @@ export default function FilterDropdown({ label, filterData }: Props) {
   };
 
   const handleSaveParams = (reset: boolean) => {
+    console.log(reset, label, "[SAVING PARAMS]");
     if (label === "Mods") {
       generateModelQuery(reset);
     } else {
       let queryObj = Object.fromEntries(searchParams);
       if (filterState.id.length === 0 || reset) {
         delete queryObj[label];
+      } else if (label === "Mans" && queryObj[label]) {
+        let activeMansArr = [...filterState.id];
+
+        queryObj[label].split(joinArr[label]).forEach((str: string) => {
+          if (str.includes(".") && activeMansArr.includes(str.split(".")[0])) {
+            let index = activeMansArr.indexOf(str.split(".")[0]);
+
+            activeMansArr.splice(index, 1, str);
+          }
+        });
+
+        queryObj[label] = activeMansArr.join(joinArr[label]);
       } else {
-        queryObj[`${label}`] = filterState.id.join(joinArr[label]);
+        queryObj[label] = filterState.id.join(joinArr[label]);
       }
 
       setSearchParams(queryObj);
@@ -144,21 +234,23 @@ export default function FilterDropdown({ label, filterData }: Props) {
   };
 
   const generateModelQuery = (reset: boolean) => {
+    console.log("Model Query", label, reset);
     let queryObj = Object.fromEntries(searchParams);
     let qString: string[] = [];
 
-    let mansObj = queryObj.Mans?.split("-").map((obj) =>
+    let mansArr = queryObj.Mans?.split("-").map((obj) =>
       obj.includes(".") ? obj.split(".")[0] : obj
     );
 
     if (reset) {
-      qString = mansObj;
+      qString = mansArr;
     } else {
-      let modelsArr = filterState.id.map((item) =>
-        typeof item === "string" ? item?.split("-") : ""
-      );
+      let modelsArr: string[][] = [];
+      filterState.id.forEach((item) => {
+        if (typeof item === "string") modelsArr.push(item?.split("-"));
+      });
 
-      qString = mansObj?.map((item) => {
+      qString = mansArr?.map((item) => {
         let innerStr = item;
 
         modelsArr.forEach((model) => {
@@ -173,7 +265,7 @@ export default function FilterDropdown({ label, filterData }: Props) {
       });
     }
     queryObj.Mans = qString?.join("-");
-
+    console.log(queryObj, "Setting MODS QUERY");
     setSearchParams(queryObj);
   };
 
@@ -190,7 +282,7 @@ export default function FilterDropdown({ label, filterData }: Props) {
   };
 
   return (
-    <div className="relative" ref={componentRef}>
+    <div className="relative" ref={divRef}>
       <span className="text-xs">{labelArr[label]}</span>
 
       <div
@@ -223,31 +315,6 @@ export default function FilterDropdown({ label, filterData }: Props) {
       {filterActive && (
         <div className="absolute top-[90px] w-full border rounded-xl bg-white box-border z-10">
           <div className="w-full py-2 max-h-[300px] overflow-x-scroll">
-            {/* {(label === "Mans" || label === "Mods") && (
-              <div className="flex flex-row justify-between items-center text-sm px-4 py-2">
-                <span>{label === "Mans" ? "პოპულარული" : "BMW"}</span>
-                <div className="h-[1px] w-14 bg-[#e9e9f0] text-[#454857]"></div>
-              </div>
-            )}
-
-            {filterData.map((item: Props["item"]) => (
-              <div
-                key={returnObjID(item)}
-                onClick={() => handleSetFilter(item)}
-                className="flex flex-row cursor-pointer items-center px-4 py-2 text-main-gray hover:text-secondary-black"
-              >
-                <div
-                  className={`flex justify-center items-center w-[14px] h-[14px] border  ${
-                    filterState.id.includes(returnObjID(item))
-                      ? "bg-main-orange border-main-orange"
-                      : "bg-white border-[#a4aec1]"
-                  } mr-3 rounded`}
-                >
-                  <CheckSVG />
-                </div>
-                <span>{returnObjName(item)}</span>
-              </div>
-            ))} */}
             {label === "Mods" ? (
               filterData.map((item) => (
                 <Scrollable
@@ -297,7 +364,6 @@ type ScrollableTypes = {
 };
 
 const Scrollable = ({
-  key,
   label,
   manName,
   filterData,
@@ -305,7 +371,7 @@ const Scrollable = ({
   filterState,
 }: ScrollableTypes) => {
   return (
-    <React.Fragment key={key}>
+    <React.Fragment>
       {(label === "Mans" || label === "Mods") && (
         <div className="flex flex-row justify-between items-center text-sm px-4 py-2">
           <span>{label === "Mans" ? "პოპულარული" : manName}</span>
@@ -321,7 +387,9 @@ const Scrollable = ({
         >
           <div
             className={`flex justify-center items-center w-[14px] h-[14px] border  ${
-              filterState.id.includes(returnObjID(item))
+              filterState.id.includes(
+                label === "Mods" ? returnModelID(item) : returnObjID(item)
+              )
                 ? "bg-main-orange border-main-orange"
                 : "bg-white border-[#a4aec1]"
             } mr-3 rounded`}
