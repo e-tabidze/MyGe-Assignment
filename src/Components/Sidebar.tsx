@@ -1,11 +1,4 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
 import { bargainType } from "../Helper/Contsants";
-import {
-  getCategories,
-  getManufacturers,
-  getModels,
-} from "../Services/filter.service";
 import { ICategory, IManufacturer, IModelData } from "../Types/general";
 
 import ClickSelector from "./ClickSelector";
@@ -16,50 +9,11 @@ import RangePicker from "./RangePicker";
 type Props = {
   manufacturers: IManufacturer[];
   handleSearch: VoidFunction;
+  models: IModelData[];
+  categories: ICategory[]
 };
 
-export default function Sidebar({ manufacturers, handleSearch }: Props) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [categories, setCategories] = useState<ICategory[]>([]);
-  const [models, setModels] = useState<IModelData[]>([]);
-
-  let searchObj = Object.fromEntries(searchParams);
-
-  useEffect(() => {
-    handleGetCategories();
-  }, []);
-
-  useEffect(() => {
-    if (searchObj.Mans && manufacturers.length > 0) {
-      handleGetModels();
-    }
-
-    if (!searchObj.Mans) setModels([]);
-  }, [searchParams, manufacturers]);
-
-  const handleGetCategories = async () => {
-    const result = await getCategories();
-    setCategories(result);
-  };
-
-  const handleGetModels = async () => {
-    let mansArr = searchObj.Mans?.split("-").map((obj) =>
-      obj.includes(".") ? obj.split(".")[0] : obj
-    );
-    let endData = mansArr.map(async (man) => {
-      let manObj = manufacturers.filter((item) => item.man_id === man)[0];
-      let manData = await getModels(man);
-      return {
-        manID: manObj.man_id,
-        manName: manObj.man_name,
-        manData,
-      };
-    });
-
-    let result = await Promise.all(endData);
-
-    setModels(result);
-  };
+export default function Sidebar({ manufacturers, models, categories, handleSearch }: Props) {
 
   return (
     <div className="max-w-[250px] h-fit bg-white rounded-[11px] box-border border border-[#E2E5EB]">
