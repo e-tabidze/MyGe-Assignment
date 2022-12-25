@@ -3,13 +3,12 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      backgroundColor: {
-        "custom-gray": "#f2f3f6",
-      },
       boxShadow: {
         "upper": "0px 2px 16px rgba(39, 42, 55, 0.13)",
       },
       colors: {
+        "custom-gray": "#f2f3f6",
+        "main-green": "#26B753",
         "main-orange": "#FD4100",
         "main-gray": "#6F7383",
         "secondary-gray": "#8C929B",

@@ -44,23 +44,22 @@ export interface IProduct {
   car_model: string;
   model_id: number;
   location_id: number;
+  parent_loc_id: number;
   photo: string;
-  prod_year: number;
-  engine_volume: number;
-  price: number;
-  price_usd: number;
-  car_id: number;
+  customs_passed: boolean;
   photo_ver: number;
   man_id: number;
   prod_year: number;
   car_id: number;
-  price: number;
-  price_usd: number;
   views: number;
   order_date: string;
   engine_volume: number;
   right_wheel: boolean;
   gear_type_id: keyof typeof EnumTypeGearType;
+
+  prom_color: number; // ციანიდის ფერი
+  price_value: number; // ლარებში
+  price_usd: number;
 }
 
 export interface IProducts {

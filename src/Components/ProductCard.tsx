@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import CheckSVG from "../Assets/Icons/CheckMark";
 import GearBoxSVG from "../Assets/Icons/GearBox";
 import GeFlagSVG from "../Assets/Icons/GeFlag";
 import GelSVG from "../Assets/Icons/GelSign";
@@ -41,7 +42,7 @@ export default function ProductCard({
     let man = handleGetManufacturer(product.man_id)?.man_name;
 
     setManName(man || "");
-  }
+  };
 
   let dateToday = new Date();
 
@@ -66,24 +67,42 @@ export default function ProductCard({
             <span className="text-secondary-gray">{product.prod_year} წ</span>
           </div>
           <div className="flex items-center">
-            <span className="pr-4 text-[11px] text-main-orange">
-              განბაჟება 2,176 ლ
+            <span
+              className={`pr-4 text-[11px] ${
+                product.customs_passed ? "text-main-green" : "text-main-orange"
+              }`}
+            >
+              {/* განბაჟება 2,176 ლ */}
+              {product.customs_passed ? (
+                <div className="flex flex-row items-center">
+                  <CheckSVG color="#26B753" />
+                  <span className="ml-1.5">განბაჟებული</span>
+                </div>
+              ) : (
+                <>განუბაჟებელი</>
+              )}
             </span>
-            <GeFlagSVG />
-            <span className="pl-2 text-sm text-main-gray">გზაშია</span>
+            {product.parent_loc_id === 1 ? <GeFlagSVG /> : null}
+            <span className="pl-2 text-sm text-main-gray">
+              {product.parent_loc_id === 1
+                ? product.location_id === 2
+                  ? "თბილისი"
+                  : "საქართველოშია"
+                : "გზაშია"}
+            </span>
           </div>
         </div>
-        <div className="flex">
+        <div className="flex !text-xs">
           <div className="grow">
             <div className="flex items-center">
               <MotorSVG />
-              <span className="ml-3 text-sm text-main-black my-2.5">
+              <span className="ml-3 text-main-black my-2.5">
                 {calculateEngineVolume()}
               </span>
             </div>
             <div className="flex items-center">
               <GearBoxSVG />
-              <span className="ml-3 text-sm text-main-black my-2.5">
+              <span className="ml-3 text-main-black my-2.5">
                 {EnumTypeGearType[product.gear_type_id]}
               </span>
             </div>
@@ -91,24 +110,24 @@ export default function ProductCard({
           <div className="grow">
             <div className="flex items-center">
               <RunSVG />
-              <span className="ml-3 text-sm text-main-black my-2.5">
+              <span className="ml-3 text-main-black my-2.5">
                 {product.car_run_km} კმ
               </span>
             </div>
             <div className="flex items-center">
               <WheelSVG />
-              <span className="ml-3 text-sm text-main-black my-2.5">
+              <span className="ml-3 text-main-black my-2.5">
                 {product.right_wheel ? "მარჯვენა" : "მარცხენა"}
               </span>
             </div>
           </div>
           <div className="grow flex justify-end pt-7">
-            <span className="pr-2"> {product.price.toLocaleString("en")} </span>
+            <span className="pr-2"> {product.price_usd.toLocaleString("en")} </span>
             <CurrencySwitcher />
           </div>
         </div>
         <div className="flex justify-between">
-          <div className="text-main-gray text-sm">
+          <div className="text-main-gray text-xs">
             {product.views} ნახვა •{" "}
             {Math.ceil(
               // @ts-ignore

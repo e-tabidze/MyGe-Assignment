@@ -393,7 +393,7 @@ const Scrollable = ({
                 : "bg-white border-[#a4aec1]"
             } mr-3 rounded`}
           >
-            <CheckSVG />
+            <CheckSVG color="#fff" />
           </div>
           <span>{returnObjName(item)}</span>
         </div>

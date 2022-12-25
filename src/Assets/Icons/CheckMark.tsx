@@ -12,7 +12,7 @@ const CheckSVG = ({ color }: SVGProps<SVGSVGElement>) => (
         d="M10,6,5.875,10,4,8.182"
         transform="translate(-3 -4)"
         fill="none"
-        stroke="#fff"
+        stroke={color}
         strokeLinecap="round"
         strokeLinejoin="round"
         strokeWidth="1.5px"
