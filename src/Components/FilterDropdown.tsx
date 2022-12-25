@@ -157,7 +157,6 @@ export default function FilterDropdown({ label, filterData }: Props) {
       default:
         break;
     }
-    // console.log(stateObj, label, 'SETTING')
     setFilterState(stateObj);
   };
 
@@ -207,7 +206,6 @@ export default function FilterDropdown({ label, filterData }: Props) {
   };
 
   const handleSaveParams = (reset: boolean) => {
-    console.log(reset, label, "[SAVING PARAMS]");
     if (label === "Mods") {
       generateModelQuery(reset);
     } else {
@@ -237,7 +235,6 @@ export default function FilterDropdown({ label, filterData }: Props) {
   };
 
   const generateModelQuery = (reset: boolean) => {
-    console.log("Model Query", label, reset);
     let queryObj = Object.fromEntries(searchParams);
     let qString: string[] = [];
 
@@ -268,7 +265,6 @@ export default function FilterDropdown({ label, filterData }: Props) {
       });
     }
     queryObj.Mans = qString?.join("-");
-    console.log(queryObj, "Setting MODS QUERY");
     setSearchParams(queryObj);
   };
 

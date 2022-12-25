@@ -41,7 +41,6 @@ export default function SortDropdown({ label }: Props) {
       );
       setSortID(searchObj[label]);
       setSortValue(sortName?.title || "");
-      console.log(sortName);
     }
   };
 

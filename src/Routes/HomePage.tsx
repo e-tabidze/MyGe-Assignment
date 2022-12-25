@@ -8,6 +8,7 @@ import {
 } from "../Services/filter.service";
 import { IManufacturer, IModel, IProducts, IProduct } from "../Types/general";
 import ProductCard from "../Components/ProductCard";
+import SortDropdown from "../Components/SortDropdown";
 
 type Props = {};
 
@@ -17,7 +18,7 @@ export default function HomePage({}: Props) {
   const [manId, setManId] = useState<string>("");
   const [manufacturers, setManufacturers] = useState<IManufacturer[]>([]);
   const [page, setPage] = useState(1);
-  
+
   useEffect(() => {
     handleSearch();
     handleGetManufacturers();
@@ -50,12 +51,14 @@ export default function HomePage({}: Props) {
     return manufacturer;
   };
 
+  const handleGetModel = () => {
+
+  }
+
   const handleSearch = async () => {
     let url = window.location.search;
-    console.log(url, ' SEARCH STRING');
 
     let result = await getProducts(url);
-    console.log(result, ' [PRODUCTS RESULT]');
 
     setProducts(result);
   };
@@ -70,8 +73,12 @@ export default function HomePage({}: Props) {
             <div className="flex flex-row justify-between items-center mb-4">
               <span>{products?.meta.total} განცხადება</span>
               <div className="flex flex-row">
-                <div>Sort #1</div>
-                <div>Sort #2</div>
+                <div className="mr-2">
+                  <SortDropdown label="Period" />
+                </div>
+                <div>
+                  <SortDropdown label="SortOrder" />
+                </div>
               </div>
             </div>
             {products?.items.map((product: IProduct, key) => (

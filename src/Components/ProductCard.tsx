@@ -32,14 +32,10 @@ export default function ProductCard({
 
   let dateToday = new Date();
 
-  // var txt2 = "2000".slice(0, 1) + "." + "2000".slice(3);
-  // console.log(txt2, "txt2");
-
   const calculateEngineVolume = () => {
     let engineVolume = product.engine_volume.toString();
     return engineVolume.slice(0, 1) + "." + engineVolume.slice(1, 2);
   };
-
   return (
     <div className="flex flex-row items-center max-w-[780px] bg-white rounded-[14px] box-border border border-[#E2E5EB] px-3 py-4 mb-2.5">
       <div className="!w-[182px] !h-[144px]">
@@ -52,7 +48,7 @@ export default function ProductCard({
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row justify-between items-center text-sm font-medium">
             <span className="text-secondary-black mr-2">
-              {handleGetManufacturer()?.man_name} Semsoti Brat
+              {handleGetManufacturer()?.man_name} {product.car_model}
             </span>
             <span className="text-secondary-gray">{product.prod_year} წ</span>
           </div>

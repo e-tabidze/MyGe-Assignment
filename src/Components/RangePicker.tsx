@@ -51,7 +51,6 @@ Props) {
       [toName]: searchObj[toName] || "",
     }
 
-    console.log(initState, '[INIT VALUES]');
     setValueObj(initState);
   }
 

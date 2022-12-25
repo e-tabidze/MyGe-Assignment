@@ -41,6 +41,7 @@ export interface IItem {
 export interface IProduct {
   category_id: number;
   car_run_km: number;
+  car_model: string;
   location_id: number;
   photo: string;
   prod_year: number;
