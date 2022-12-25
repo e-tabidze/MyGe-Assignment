@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import CheckSVG from "../Assets/Icons/CheckMark";
 import GearBoxSVG from "../Assets/Icons/GearBox";
 import GeFlagSVG from "../Assets/Icons/GeFlag";
@@ -9,7 +10,7 @@ import NotesSVG from "../Assets/Icons/Notes";
 import RunSVG from "../Assets/Icons/Run";
 import ScalesSVG from "../Assets/Icons/Scales";
 import WheelSVG from "../Assets/Icons/Wheel";
-import { EnumTypeGearType } from "../Helper/Contsants";
+import { EnumTypeFuelType, EnumTypeGearType } from "../Helper/Contsants";
 import { IManufacturer, IProduct } from "../Types/general";
 import CurrencySwitcher from "./CurrencySwitcher";
 
@@ -24,6 +25,7 @@ export default function ProductCard({
   handleGetManufacturer,
   handleGetModelName,
 }: Props) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [modelName, setModelName] = useState("");
   const [manName, setManName] = useState("");
 
@@ -50,6 +52,14 @@ export default function ProductCard({
     let engineVolume = product.engine_volume.toString();
     return engineVolume.slice(0, 1) + "." + engineVolume.slice(1, 2);
   };
+
+  const handleReturnCurrency = () => {
+    let currency = searchParams.get("currId");
+
+    let value = currency === "3" ? product.price_value : product.price_usd;
+    return value.toLocaleString("en");
+  };
+
   return (
     <div className="flex flex-row items-center max-w-[780px] bg-white rounded-[14px] box-border border border-[#E2E5EB] px-3 py-4 mb-2.5">
       <div className="!w-[182px] !h-[144px]">
@@ -83,7 +93,7 @@ export default function ProductCard({
               )}
             </span>
             {product.parent_loc_id === 1 ? <GeFlagSVG /> : null}
-            <span className="pl-2 text-sm text-main-gray">
+            <span className="pl-2 text-xs text-main-gray">
               {product.parent_loc_id === 1
                 ? product.location_id === 2
                   ? "თბილისი"
@@ -92,38 +102,41 @@ export default function ProductCard({
             </span>
           </div>
         </div>
-        <div className="flex !text-xs">
-          <div className="grow">
-            <div className="flex items-center">
-              <MotorSVG />
-              <span className="ml-3 text-main-black my-2.5">
-                {calculateEngineVolume()}
-              </span>
+        <div className="flex flex-col text-xs">
+          <div className="flex flex-row justify-between items-center">
+            <div className="flex flex-row justify-between items-center">
+              <div className="flex items-center w-[180px]">
+                <MotorSVG />
+                <span className="ml-3 text-main-black my-2.5">
+                  {`${calculateEngineVolume()} ${EnumTypeFuelType[product.fuel_type_id]}`}
+                </span>
+              </div>
+
+              <div className="flex items-center w-[180px] ml-[30px]">
+                <RunSVG />
+                <span className="ml-3 text-main-black my-2.5">
+                  {product.car_run_km} კმ
+                </span>
+              </div>
             </div>
-            <div className="flex items-center">
+            <div className="flex flex-row items-center">
+              <span className="mr-1 text-xl font-md text-secondary-black">{handleReturnCurrency()}</span>
+              <CurrencySwitcher />
+            </div>
+          </div>
+          <div className="flex flex-row">
+            <div className="flex items-center w-[180px]">
               <GearBoxSVG />
               <span className="ml-3 text-main-black my-2.5">
                 {EnumTypeGearType[product.gear_type_id]}
               </span>
             </div>
-          </div>
-          <div className="grow">
-            <div className="flex items-center">
-              <RunSVG />
-              <span className="ml-3 text-main-black my-2.5">
-                {product.car_run_km} კმ
-              </span>
-            </div>
-            <div className="flex items-center">
+            <div className="flex items-center w-[180px] ml-[30px]">
               <WheelSVG />
               <span className="ml-3 text-main-black my-2.5">
                 {product.right_wheel ? "მარჯვენა" : "მარცხენა"}
               </span>
             </div>
-          </div>
-          <div className="grow flex justify-end pt-7">
-            <span className="pr-2"> {product.price_usd.toLocaleString("en")} </span>
-            <CurrencySwitcher />
           </div>
         </div>
         <div className="flex justify-between">

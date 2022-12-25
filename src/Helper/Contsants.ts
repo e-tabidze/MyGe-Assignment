@@ -16,6 +16,17 @@ export const EnumTypeGearType = {
   4: "ვარიატორი",
 };
 
+export const EnumTypeFuelType = {
+  2: "ბენზინი",
+  3: "დიზელი",
+  6: "ჰიბრიდი",
+  7: "ელექტრო",
+  8: "ბუნებრივი გაზი",
+  9: "თხევადი გაზი",
+  10: "დატ. ჰიბრიდი",
+  12: "წყალბადი",
+}
+
 export const periodsArr = [
   {
     id: "1h",

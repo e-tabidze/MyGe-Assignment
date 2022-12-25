@@ -1,4 +1,4 @@
-import { EnumTypeGearType } from "./../Helper/Contsants";
+import { EnumTypeGearType, EnumTypeFuelType } from "./../Helper/Contsants";
 import { IProduct } from "./general.d";
 export interface IBargain {
   id: number;
@@ -56,10 +56,11 @@ export interface IProduct {
   engine_volume: number;
   right_wheel: boolean;
   gear_type_id: keyof typeof EnumTypeGearType;
-
-  prom_color: number; // ციანიდის ფერი
+  fuel_type_id: keyof typeof EnumTypeFuelType;
   price_value: number; // ლარებში
   price_usd: number;
+
+  prom_color: number; // ციანიდის ფერი
 }
 
 export interface IProducts {
