@@ -42,6 +42,7 @@ export interface IProduct {
   category_id: number;
   car_run_km: number;
   car_model: string;
+  model_id: number;
   location_id: number;
   photo: string;
   prod_year: number;

@@ -15,33 +15,22 @@ type Props = {};
 export default function HomePage({}: Props) {
   const [products, setProducts] = useState<IProducts>();
   const [models, setModels] = useState<IModel[]>([]);
-  const [manId, setManId] = useState<string>("");
+  // const [manId, setManId] = useState<string>("");
   const [manufacturers, setManufacturers] = useState<IManufacturer[]>([]);
   const [page, setPage] = useState(1);
 
   useEffect(() => {
     handleSearch();
     handleGetManufacturers();
-    // handleGetModels();
     return () => {
       setModels([]);
       setManufacturers([]);
     };
   }, []);
 
-  // const fetchProducts = async () => {
-  //   let result = await getProducts();
-  //   setProducts(result);
-  // };
-
   const handleGetManufacturers = async () => {
     const result = await getManufacturers();
     setManufacturers(result);
-  };
-
-  const handleGetModels = async () => {
-    const result = await getModels(manId);
-    setModels(result);
   };
 
   const handleGetManufacturer = (id: number) => {
@@ -51,8 +40,12 @@ export default function HomePage({}: Props) {
     return manufacturer;
   };
 
-  const handleGetModel = () => {
+  const handleGetModelName = async (man_id: number, model_id: number) => {
+    let modelsArr = await getModels(man_id);
+    console.log(modelsArr, '[MODELS ARR]');
+    let model = modelsArr.find((mod: IModel) => mod.model_id === model_id);
 
+    return model.moden_name;
   }
 
   const handleSearch = async () => {
@@ -83,13 +76,12 @@ export default function HomePage({}: Props) {
             </div>
             {products?.items.map((product: IProduct, key) => (
               <ProductCard
+              key={product.car_id}
                 product={product}
-                handleGetManufacturer={() =>
-                  handleGetManufacturer(product.man_id)
-                }
-                manId={manId}
-                setManId={setManId}
-                key={product.car_id}
+                // manId={manId}
+                // setManId={setManId}
+                handleGetModelName={handleGetModelName}
+                handleGetManufacturer={handleGetManufacturer}
               />
             ))}
           </div>

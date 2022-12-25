@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import GearBoxSVG from "../Assets/Icons/GearBox";
 import GeFlagSVG from "../Assets/Icons/GeFlag";
 import GelSVG from "../Assets/Icons/GelSign";
@@ -14,21 +14,34 @@ import CurrencySwitcher from "./CurrencySwitcher";
 
 type Props = {
   product: IProduct;
-  handleGetManufacturer: () => IManufacturer | undefined;
-  setManId: React.Dispatch<React.SetStateAction<any>>;
-  manId: string;
+  handleGetModelName: (man_id: number, model_id: number) => Promise<string>;
+  handleGetManufacturer: (man_id: number) => IManufacturer | undefined;
 };
 
 export default function ProductCard({
   product,
   handleGetManufacturer,
-  setManId,
+  handleGetModelName,
 }: Props) {
+  const [modelName, setModelName] = useState("");
+  const [manName, setManName] = useState("");
+
   useEffect(() => {
-    setManufacturerId();
+    handleSetModel();
+    handelSetMan();
   }, []);
 
-  const setManufacturerId = () => setManId(handleGetManufacturer()?.man_id);
+  const handleSetModel = async () => {
+    let model = await handleGetModelName(product.man_id, product.model_id);
+
+    setModelName(model);
+  };
+
+  const handelSetMan = async () => {
+    let man = handleGetManufacturer(product.man_id)?.man_name;
+
+    setManName(man || "");
+  }
 
   let dateToday = new Date();
 
@@ -48,7 +61,7 @@ export default function ProductCard({
         <div className="flex flex-row justify-between items-center">
           <div className="flex flex-row justify-between items-center text-sm font-medium">
             <span className="text-secondary-black mr-2">
-              {handleGetManufacturer()?.man_name} {product.car_model}
+              {`${manName} ${modelName} ${product.car_model}`}
             </span>
             <span className="text-secondary-gray">{product.prod_year} წ</span>
           </div>
