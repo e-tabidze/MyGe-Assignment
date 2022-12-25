@@ -34,6 +34,8 @@ export default function Sidebar({ manufacturers }: Props) {
     if (searchObj.Mans && manufacturers.length > 0) {
       handleGetModels();
     }
+
+    if (!searchObj.Mans) setModels([]);
   }, [searchParams, manufacturers]);
 
   const handleGetCategories = async () => {

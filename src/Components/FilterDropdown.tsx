@@ -71,7 +71,7 @@ export default function FilterDropdown({ label, filterData }: Props) {
 
   useEffect(() => {
     if (!filterActive && !componentRef.current.isFirstRender)
-    handleSaveParams(false);
+      handleSaveParams(false);
   }, [filterActive]);
 
   useEffect(() => {
@@ -90,7 +90,9 @@ export default function FilterDropdown({ label, filterData }: Props) {
   }, [divRef]);
 
   useEffect(() => {
-    if (searchParams && filterData.length > 0) {
+    let searchObj = Object.fromEntries(searchParams);
+    
+    if (searchObj[label] && filterData.length > 0) {
       handleSetData();
     }
   }, [searchParams, filterData]);
@@ -162,7 +164,8 @@ export default function FilterDropdown({ label, filterData }: Props) {
   // Filter State Actions
   const handleFilterToggle = () => {
     if (label === "Mods" && filterData.length === 0) return;
-    if(componentRef.current.isFirstRender) componentRef.current.isFirstRender = false;
+    if (componentRef.current.isFirstRender)
+      componentRef.current.isFirstRender = false;
     toggleFilterActive(!filterActive);
   };
 
