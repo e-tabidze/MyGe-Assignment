@@ -58,7 +58,7 @@ export default function ProductCard({
     let currency = searchParams.get("currId");
 
     let value = currency === "3" ? product.price_value : product.price_usd;
-    return value.toLocaleString("en");
+    return Math.round(value).toLocaleString("en");
   };
 
   const handleDateRender = () => {
