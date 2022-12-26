@@ -93,7 +93,7 @@ export default function FilterDropdown({ label, filterData }: Props) {
 
   useEffect(() => {
     searchObj = Object.fromEntries(searchParams);
-    if ((searchObj[label] || label === "Mods") && filterData.length > 0) {
+    if (filterData.length > 0) {
       handleSetData();
     }
   }, [searchParams, filterData]);

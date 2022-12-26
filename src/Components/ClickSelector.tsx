@@ -35,6 +35,10 @@ export default function ClickSelector({}: Props) {
     let searchObj = Object.fromEntries(searchParams);
 
     searchObj.vehicleType = typeID;
+
+    delete searchObj.Mans;
+    delete searchObj.Cats;
+
     setVehicleType(typeID);
     setSearchParams(searchObj);
   };
