@@ -95,11 +95,12 @@ export default function ProductCard({
             handleReturnCurrency={handleReturnCurrency}
           />
         </div>
-        <div className="w-full sm:w-[182px] sm:h-36">
+        <div className="w-full sm:w-[182px] sm:h-36 relative">
           <img
             src={`https://static.my.ge/myauto/photos/${product.photo}/thumbs/${product.car_id}_1.jpg?v=${product.photo_ver}`}
             className="rounded-lg w-full h-full"
           />
+          <HeartSVG className="sm:hidden absolute top-3 right-3 w-5 h-5" color="#fff" />
         </div>
         <div className="flex flex-col w-full sm:w-auto sm:grow justify-between sm:ml-4 h-36">
           <div className="hidden sm:block">
@@ -155,8 +156,8 @@ export default function ProductCard({
             <div className="text-main-gray text-xs">
               {`${product.views} ნახვა • ${handleDateRender()}`}
             </div>
-            <div className="flex w-[90px] justify-between">
-              <NotesSVG /> <ScalesSVG /> <HeartSVG />
+            <div className="flex w-[50px] sm:w-[90px] justify-between">
+              <NotesSVG /> <ScalesSVG /> <HeartSVG className="hidden sm:block" />
             </div>
           </div>
         </div>
