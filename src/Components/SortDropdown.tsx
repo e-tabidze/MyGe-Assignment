@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { periodsArr, sortsArr } from "../Helper/Contsants";
@@ -17,6 +17,7 @@ interface ISortObj {
 
 export default function SortDropdown({ label }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const divRef = useRef<any>(null);
 
   const [sortActive, toggleSortActive] = useState(false);
   const [sortID, setSortID] = useState(
@@ -33,6 +34,21 @@ export default function SortDropdown({ label }: Props) {
   useEffect(() => {
     setInitialValues();
   }, []);
+
+  useEffect(() => {
+    // Functionality for Closing Current Filter on Mouse Outside Click Event
+    function handleClickListener(event: MouseEvent) {
+      if (divRef.current && !divRef.current.contains(event.target)) {
+        toggleSortActive(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickListener);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickListener);
+    };
+  }, [divRef]);
 
   const setInitialValues = () => {
     if (searchObj[label]) {
@@ -61,6 +77,7 @@ export default function SortDropdown({ label }: Props) {
   return (
     <div
       onClick={handleSortToggle}
+      ref={divRef}
       className="px-1 sm:px-3 py-2 bg-white relative border rounded-md"
     >
       <div className="cursor-pointer flex flex-row justify-between items-center">
