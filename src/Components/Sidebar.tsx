@@ -79,8 +79,8 @@ export default function Sidebar({
       </div>
       <div
         className={`fixed ${
-          sidebarActive ? "!left-0" : ""
-        } w-screen h-screen overflow-y-scroll sm:overflow-none pb-12 sm:pb-0 z-40 top-12 sm:top-0 -left-full sm:left-0 transition-all duration-300 sm:relative sm:block sm:max-w-[250px] sm:h-fit bg-white rounded-[11px] box-border border border-[#E2E5EB]`}
+          sidebarActive ? "!left-0 overflow-y-scroll" : ""
+        } w-screen h-screen pb-12 sm:pb-0 z-40 top-12 sm:top-0 -left-full sm:left-0 transition-all duration-300 sm:relative sm:block sm:max-w-[250px] sm:h-fit bg-white rounded-[11px] box-border border border-[#E2E5EB]`}
       >
         <ClickSelector />
 
