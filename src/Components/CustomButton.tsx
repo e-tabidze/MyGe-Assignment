@@ -14,7 +14,7 @@ export default function CustomButton({
   wrapperClassName,
 }: Props) {
   return (
-    <div className={`w-fit bg-main-orange rounded-md ${wrapperClassName}`}>
+    <div className={`w-fit bg-main-orange hover:bg-[#9d2800] transition duration-300 rounded-md ${wrapperClassName}`}>
       <button
         onClick={onClick}
         className={`text-white ${className}`}

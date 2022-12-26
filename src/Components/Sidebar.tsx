@@ -1,5 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import ArrowRight from "../Assets/Icons/ArrowRight";
+import EmptyBinSVG from "../Assets/Icons/DeleteButtom";
 import FilterSVG from "../Assets/Icons/Filter";
 import { bargainType } from "../Helper/Contsants";
 import { ICategory, IManufacturer, IModelData } from "../Types/general";
@@ -22,11 +24,37 @@ export default function Sidebar({
   categories,
   handleSearch,
 }: Props) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [sidebarActive, toggleSidebarActive] = useState(false);
+  const [filtersActive, toggleFiltersActive] = useState(false);
+
+  let searchObj = Object.fromEntries(searchParams);
+
+  useEffect(() => {
+    if (
+      searchObj.Mans ||
+      searchObj.Cats ||
+      searchObj.ForRent ||
+      searchObj.Period
+    ) {
+      toggleFiltersActive(true);
+    } else {
+      toggleFiltersActive(false);
+    }
+  }, [searchParams]);
 
   const handleSearchClick = () => {
     handleSearch();
     toggleSidebarActive(false);
+  };
+
+  const handleEmptyClick = () => {
+    delete searchObj.Mans;
+    delete searchObj.Cats;
+    delete searchObj.ForRent;
+    delete searchObj.Period;
+
+    setSearchParams(searchObj);
   };
 
   return (
@@ -79,13 +107,21 @@ export default function Sidebar({
           />
         </div>
 
-        <div className="w-full pt-4 pb-5 shadow-lg shadow-upper">
+        <div className="flex flex-row w-full pt-4 px-5 pb-5 shadow-lg shadow-upper">
           <CustomButton
             onClick={handleSearchClick}
             text="ძებნა"
-            wrapperClassName="mx-auto"
-            className="text-sm font-bold py-2 w-[202px]"
+            wrapperClassName="mx-auto grow flex items-center justify-center"
+            className="text-sm font-bold py-2"
           />
+          {filtersActive && (
+            <div
+              onClick={handleEmptyClick}
+              className="p-2.5 ml-2 w-9 h-9 box-border rounded-md border cursor-pointer"
+            >
+              <EmptyBinSVG />
+            </div>
+          )}
         </div>
       </div>
     </>
