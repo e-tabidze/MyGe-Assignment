@@ -196,10 +196,10 @@ export default function HomePage({}: Props) {
               </span>
               <div className="flex flex-row">
                 <div className="mr-1 sm:mr-2">
-                  <SortDropdown label="Period" />
+                  <SortDropdown label="Period" handleSearch={handleSearch} />
                 </div>
                 <div>
-                  <SortDropdown label="SortOrder" />
+                  <SortDropdown label="SortOrder" handleSearch={handleSearch} />
                 </div>
               </div>
             </div>

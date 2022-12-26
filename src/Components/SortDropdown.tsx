@@ -7,6 +7,7 @@ import ArrowBottom from "../Assets/Icons/ArrowBottom";
 
 type Props = {
   label: string;
+  handleSearch: VoidFunction
 };
 
 interface ISortObj {
@@ -15,7 +16,7 @@ interface ISortObj {
   [key: string]: string;
 }
 
-export default function SortDropdown({ label }: Props) {
+export default function SortDropdown({ label, handleSearch }: Props) {
   const [searchParams, setSearchParams] = useSearchParams();
   const divRef = useRef<any>(null);
 
@@ -68,6 +69,7 @@ export default function SortDropdown({ label }: Props) {
     searchObj[label] = item.id;
 
     setSearchParams(searchObj);
+    handleSearch();
   };
 
   const handleSortToggle = () => {
