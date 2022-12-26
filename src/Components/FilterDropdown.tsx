@@ -69,6 +69,8 @@ export default function FilterDropdown({ label, filterData }: Props) {
   });
   const [filterActive, toggleFilterActive] = useState<boolean>(false);
 
+  let searchObj = Object.fromEntries(searchParams);
+
   useEffect(() => {
     if (!filterActive && !componentRef.current.isFirstRender)
       handleSaveParams(false);
@@ -90,9 +92,8 @@ export default function FilterDropdown({ label, filterData }: Props) {
   }, [divRef]);
 
   useEffect(() => {
-    let searchObj = Object.fromEntries(searchParams);
-    
-    if (searchObj[label] && filterData.length > 0) {
+    searchObj = Object.fromEntries(searchParams);
+    if ((searchObj[label] || label === "Mods") && filterData.length > 0) {
       handleSetData();
     }
   }, [searchParams, filterData]);
