@@ -10,7 +10,7 @@ export default function BreadCrumbs({}: Props) {
 
   let searchObj = Object.fromEntries(searchParams);
   return (
-    <div className="py-5 w-full flex flex-row items-center text-xs">
+    <div className="py-5 sm:px-0 px-1 w-full flex flex-row items-center text-xs">
       <span className="text-main-gray">მთავარი</span>
       <ArrowRight className="mx-2" />
       <span className="text-main-gray">ძიება</span>

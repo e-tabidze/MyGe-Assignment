@@ -73,66 +73,47 @@ export default function ProductCard({
     var diffHrs = Math.floor((diff % 86400000) / 3600000); // hours
     var diffMins = Math.round(((diff % 86400000) % 3600000) / 60000);
 
-    if(diffMins > 0) suffix = `${diffMins} წუთის წინ`;
-    if(diffHrs > 0) suffix = `${diffHrs} საათის წინ`;
-    if(diffDays > 0) suffix = `${diffDays} დღის წინ`;
-    if(diffWeeks > 0) suffix = `${diffWeeks} კვირის წინ`
+    if (diffMins > 0) suffix = `${diffMins} წუთის წინ`;
+    if (diffHrs > 0) suffix = `${diffHrs} საათის წინ`;
+    if (diffDays > 0) suffix = `${diffDays} დღის წინ`;
+    if (diffWeeks > 0) suffix = `${diffWeeks} კვირის წინ`;
     return suffix;
   };
 
   return (
     <div
-      className={`flex flex-col max-w-[780px] bg-white rounded-[14px]  mb-2.5 box-border border border-[#E2E5EB] ${
+      className={`flex flex-col max-w-full sm:grow bg-white sm:rounded-[14px] sm:mb-2.5 box-border border-b sm:border border-[#E2E5EB] ${
         product.prom_color && "!border-main-cyan !bg-secondary-cyan"
       }`}
     >
-      <div className="flex flex-row items-center px-3 py-4">
-        <div className="!w-[182px] !h-[144px]">
+      <div className="flex flex-col sm:flex-row items-center px-3 py-4">
+        <div className="sm:hidden block w-full mb-2">
+          <ProductHeader
+            manName={manName}
+            modelName={modelName}
+            product={product}
+            handleReturnCurrency={handleReturnCurrency}
+          />
+        </div>
+        <div className="w-full sm:w-[182px] sm:h-36">
           <img
             src={`https://static.my.ge/myauto/photos/${product.photo}/thumbs/${product.car_id}_1.jpg?v=${product.photo_ver}`}
             className="rounded-lg w-full h-full"
           />
         </div>
-        <div className="flex flex-col justify-between ml-4 h-[144px] w-[558px]">
-          <div className="flex flex-row justify-between items-center">
-            <div className="flex flex-row justify-between items-center text-sm font-medium">
-              <span className="text-secondary-black mr-2">
-                {`${manName} ${modelName} ${product.car_model}`}
-              </span>
-              <span className="text-secondary-gray">{product.prod_year} წ</span>
-            </div>
-            <div className="flex items-center">
-              <span
-                className={`pr-4 text-[11px] ${
-                  product.customs_passed
-                    ? "text-main-green"
-                    : "text-main-orange"
-                }`}
-              >
-                {/* განბაჟება 2,176 ლ */}
-                {product.customs_passed ? (
-                  <div className="flex flex-row items-center">
-                    <CheckSVG color="#26B753" />
-                    <span className="ml-1.5">განბაჟებული</span>
-                  </div>
-                ) : (
-                  <>განუბაჟებელი</>
-                )}
-              </span>
-              {product.parent_loc_id === 1 ? <GeFlagSVG /> : null}
-              <span className="pl-2 text-xs text-main-gray">
-                {product.parent_loc_id === 1
-                  ? product.location_id === 2
-                    ? "თბილისი"
-                    : "საქართველოშია"
-                  : "გზაშია"}
-              </span>
-            </div>
+        <div className="flex flex-col w-full sm:w-auto sm:grow justify-between sm:ml-4 h-36">
+          <div className="hidden sm:block">
+            <ProductHeader
+              manName={manName}
+              modelName={modelName}
+              product={product}
+              handleReturnCurrency={handleReturnCurrency}
+            />
           </div>
           <div className="flex flex-col text-xs">
             <div className="flex flex-row justify-between items-center">
-              <div className="flex flex-row justify-between items-center">
-                <div className="flex items-center w-[180px]">
+              <div className="flex flex-row sm:justify-between items-center w-full sm:w-auto">
+                <div className="flex items-center w-2/5 sm:w-[180px]">
                   <MotorSVG />
                   <span className="ml-3 text-main-black my-2.5">
                     {`${calculateEngineVolume()} ${
@@ -141,28 +122,28 @@ export default function ProductCard({
                   </span>
                 </div>
 
-                <div className="flex items-center w-[180px] ml-[30px]">
+                <div className="flex items-center w-2/5 sm:w-[180px] ml-[30px]">
                   <RunSVG />
                   <span className="ml-3 text-main-black my-2.5">
                     {product.car_run_km} კმ
                   </span>
                 </div>
               </div>
-              <div className="flex flex-row items-center">
+              <div className="hidden sm:flex sm:flex-row items-center">
                 <span className="mr-1 text-xl font-md text-secondary-black">
                   {handleReturnCurrency()}
                 </span>
                 <CurrencySwitcher />
               </div>
             </div>
-            <div className="flex flex-row">
-              <div className="flex items-center w-[180px]">
+            <div className="flex flex-row w-full sm:w-auto">
+              <div className="flex items-center w-2/5 sm:w-[180px]">
                 <GearBoxSVG />
                 <span className="ml-3 text-main-black my-2.5">
                   {EnumTypeGearType[product.gear_type_id]}
                 </span>
               </div>
-              <div className="flex items-center w-[180px] ml-[30px]">
+              <div className="flex items-center w-2/5 sm:w-[180px] ml-[30px]">
                 <WheelSVG />
                 <span className="ml-3 text-main-black my-2.5">
                   {product.right_wheel ? "მარჯვენა" : "მარცხენა"}
@@ -199,3 +180,61 @@ export default function ProductCard({
     </div>
   );
 }
+
+interface IProductHeader {
+  manName: string;
+  modelName: string;
+  product: IProduct;
+  handleReturnCurrency: () => string;
+}
+
+const ProductHeader = ({
+  manName,
+  modelName,
+  product,
+  handleReturnCurrency,
+}: IProductHeader) => {
+  return (
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+      <div className="flex flex-row sm:justify-between items-center text-sm font-medium">
+        <span className="text-secondary-black mr-2">
+          {`${manName} ${modelName} ${product.car_model}`}
+        </span>
+        <span className="text-secondary-gray">{product.prod_year} წ</span>
+      </div>
+      <div className="flex items-center justify-between">
+        <div className="sm:hidden flex flex-row items-center mt-2.5">
+          <span className="mr-1 text-xl font-md text-secondary-black">
+            {handleReturnCurrency()}
+          </span>
+          <CurrencySwitcher />
+        </div>
+        <div className="flex flex-row items-center">
+          <span
+            className={`pr-4 text-[11px] ${
+              product.customs_passed ? "text-main-green" : "text-main-orange"
+            }`}
+          >
+            {/* განბაჟება 2,176 ლ */}
+            {product.customs_passed ? (
+              <div className="flex flex-row items-center">
+                <CheckSVG color="#26B753" />
+                <span className="ml-1.5">განბაჟებული</span>
+              </div>
+            ) : (
+              <>განუბაჟებელი</>
+            )}
+          </span>
+          {product.parent_loc_id === 1 ? <GeFlagSVG /> : null}
+          <span className="pl-2 text-xs text-main-gray">
+            {product.parent_loc_id === 1
+              ? product.location_id === 2
+                ? "თბილისი"
+                : "საქართველოშია"
+              : "გზაშია"}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};

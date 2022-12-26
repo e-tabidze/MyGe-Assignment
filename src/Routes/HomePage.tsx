@@ -106,18 +106,18 @@ export default function HomePage({}: Props) {
     <div className="w-full bg-custom-gray">
       <div className="max-w-[1050px] mx-auto py-3">
         <BreadCrumbs />
-        <div className="w-full flex flex-row">
+        <div className="w-full flex flex-col sm:flex-row">
           <Sidebar
             manufacturers={manufacturers}
             categories={categories}
             models={models}
             handleSearch={handleSearch}
           />
-          <div className="ml-5 w-[780px]">
-            <div className="flex flex-row justify-between items-center mb-4">
-              <span>{products?.meta.total} განცხადება</span>
+          <div className="flex flex-col grow sm:ml-5">
+            <div className="flex flex-row justify-between items-center mb-4 px-1 sm:px-0">
+              <span className="text-xs sm:text-base">{products?.meta.total} განცხადება</span>
               <div className="flex flex-row">
-                <div className="mr-2">
+                <div className="mr-1 sm:mr-2">
                   <SortDropdown label="Period" />
                 </div>
                 <div>

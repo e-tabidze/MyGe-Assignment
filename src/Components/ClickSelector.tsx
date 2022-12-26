@@ -43,7 +43,7 @@ export default function ClickSelector({}: Props) {
     <div className="w-full flex flex-row">
       <div
         onClick={() => handleSetQuery("0")}
-        className={`flex items-center justify-center w-[83px] ${
+        className={`flex items-center justify-center grow sm:w-[83px] ${
           vehicleType === "0" ? bgColorScheme.active : bgColorScheme.inactive
         } h-12 rounded-tl-[11px] cursor-pointer transition duration-300 hover:bg-white border-b`}
       >
@@ -57,7 +57,7 @@ export default function ClickSelector({}: Props) {
         onClick={() => handleSetQuery("1")}
         className={`flex items-center justify-center ${
           vehicleType === "1" ? bgColorScheme.active : bgColorScheme.inactive
-        } w-[83px] h-12  cursor-pointer transition duration-300 hover:bg-white box-border border-x border-b`}
+        } grow sm:w-[83px] h-12  cursor-pointer transition duration-300 hover:bg-white box-border border-x border-b`}
       >
         <TractorSVG
           color={
@@ -69,7 +69,7 @@ export default function ClickSelector({}: Props) {
         onClick={() => handleSetQuery("2")}
         className={`flex items-center justify-center ${
           vehicleType === "2" ? bgColorScheme.active : bgColorScheme.inactive
-        } w-[83px] h-12  rounded-tr-[11px] transition duration-300 hover:bg-white cursor-pointer border-b`}
+        } grow sm:w-[83px] h-12  rounded-tr-[11px] transition duration-300 hover:bg-white cursor-pointer border-b`}
       >
         <MotoSVG
           color={

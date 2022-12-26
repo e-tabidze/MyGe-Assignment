@@ -61,10 +61,10 @@ export default function SortDropdown({ label }: Props) {
   return (
     <div
       onClick={handleSortToggle}
-      className="px-3 py-2 bg-white relative border rounded-md"
+      className="px-1 sm:px-3 py-2 bg-white relative border rounded-md"
     >
       <div className="cursor-pointer flex flex-row justify-between items-center">
-        <span className="text-sm text-main-gray mr-3">{sortValue}</span>
+        <span className="text-xs sm:text-sm text-main-gray mr-3">{sortValue}</span>
 
         <div>
           <ArrowBottom
@@ -74,7 +74,7 @@ export default function SortDropdown({ label }: Props) {
       </div>
 
       {sortActive && (
-        <div className="w-[180px] absolute left-0 top-10 bg-white w-fit py-1 rounded-md z-20">
+        <div className="w-[180px] absolute right-0 top-10 bg-white w-fit py-1 rounded-md z-20">
           {mappableData.map((item) => (
             <div
               key={item.id}
